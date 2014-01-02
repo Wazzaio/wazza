@@ -1,0 +1,26 @@
+@(message: String)
+
+@main("Items Management") {
+    
+        <section data-transition="slide" ng-controller="AppCtrl"> 
+            <article id="main-article" class="active">
+               <h1>Items Management</h1>
+               <table>
+                    <tr>
+                        <th>Item</th>
+                        <th>id</th>
+                        <th>Quantity</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr ng-repeat="item in summary">
+                        <td>{{item.name}}</td>
+                        <td>{{item.id}}</td>
+                        <td>{{item.quantity}}</td>
+                        <td>{{item.description}}</td>
+                    </tr>
+                </table>
+            </article>
+        </section>
+
+        
+}
