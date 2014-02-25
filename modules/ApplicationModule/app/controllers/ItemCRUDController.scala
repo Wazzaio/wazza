@@ -17,6 +17,7 @@ import service.aws.definitions.{PhotosService}
 import play.api.libs.Files._
 import java.io.File
 import play.api.mvc.MultipartFormData._
+import play.api.libs.iteratee.Enumerator
 import scala.language.implicitConversions
 
 /** Uncomment the following lines as needed **/
