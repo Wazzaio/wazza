@@ -60,6 +60,12 @@ class PhotosServiceImpl extends PhotosService {
     promise.future
   }
 
+  private def deleteObject(bucket: String, name: String) = {
+    val s3Client = getS3Client(bucket).get
+    val request = new DeleteObjectRequest(bucket, name)
+    s3Client.deleteObject(request)
+  }
+
   def delete(imageName: String): Future[Unit] = {
     val promise = Promise[Unit]
 
@@ -67,9 +73,7 @@ class PhotosServiceImpl extends PhotosService {
       PhotosBucket match {
         case Success(bucket) => {
           try {
-            val s3Client = getS3Client(bucket).get
-            val request = new DeleteObjectRequest(bucket, imageName)
-            s3Client.deleteObject(request)
+            deleteObject(bucket, imageName)
             promise.success()
           } catch {
               case err: AmazonServiceException if err.getStatusCode == Status.NOT_FOUND => promise.failure(new S3NotFound(bucket, imageName))
@@ -78,6 +82,28 @@ class PhotosServiceImpl extends PhotosService {
         }
         case Failure(failure) => promise.failure(failure)
       }   
+    }
+
+    promise.future
+  }
+
+  def copyAndDelete(name: String, newName: String): Future[UploadPhotoResult] = {
+    val promise = Promise[UploadPhotoResult]
+
+    PhotosBucket match {
+      case Success(bucket) => {
+        try {
+          val s3Client = getS3Client(bucket).get
+          val request = new CopyObjectRequest(bucket, name, bucket, newName)
+          s3Client.copyObject(request)
+          deleteObject(bucket, name)
+          promise.success(new UploadPhotoResult(newName, generateS3ObjectURL(bucket, newName, s3Client)))
+        } catch {
+        case err: AmazonServiceException if err.getStatusCode == Status.NOT_FOUND => promise.failure(new S3NotFound(bucket, name))
+        case err: Throwable => promise.failure(new S3Failed(err))
+        }
+      }
+      case Failure(f) => promise.failure(f)
     }
 
     promise.future

@@ -12,4 +12,5 @@ trait PhotosService extends PhotosData {
 
   def delete(name: String): Future[Unit]
 
+  def copyAndDelete(name: String, newName: String): Future[UploadPhotoResult]
 }

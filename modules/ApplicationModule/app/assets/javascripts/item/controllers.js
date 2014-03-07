@@ -36,7 +36,7 @@ angular.module('ItemModule.controllers', ['ItemModule.services', 'angularFileUpl
         "description": "",
         "store": 1,
         "metadata": {
-          "osType": "",
+          "osType": ApplicationStateService.applicationType,
           "title": "",
           "description": "",
           "publishedState": "published",

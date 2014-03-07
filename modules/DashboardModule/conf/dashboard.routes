@@ -4,7 +4,8 @@
 
 # Home page
 GET     /                             @controllers.dashboard.DashboardController.index
-GET     /bootstrap                    @controllers.dashboard.DashboardController.bootstrapDashboard
+GET     /bootstrap                    @controllers.dashboard.DashboardController.bootstrapDashboard(appName = null)
+GET     /bootstrap/:appName           @controllers.dashboard.DashboardController.bootstrapDashboard(appName)
 GET     /analytics                    @controllers.dashboard.DashboardController.analyticsSection
 
 # Map static resources from the /public folder to the /assets URL path

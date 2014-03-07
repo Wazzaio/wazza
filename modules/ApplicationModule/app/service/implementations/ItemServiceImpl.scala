@@ -1,5 +1,8 @@
 package service.application.implementations
 
+import com.github.nscala_time.time.Imports._
+import org.joda.time.Days
+import java.util.Date
 import service.application.definitions.ItemService
 import service.application.definitions.ApplicationService
 import models.application._
@@ -17,9 +20,11 @@ import play.api.mvc.MultipartFormData._
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 import scala.language.implicitConversions
+import service.aws.definitions.PhotosService
 
 class ItemServiceImpl @Inject()(
-  applicationService: ApplicationService
+  applicationService: ApplicationService,
+  photosService: PhotosService
 ) extends ItemService {
   
   private lazy val MultiplyDelta = 1000000
@@ -44,7 +49,7 @@ class ItemServiceImpl @Inject()(
 
     val metadata = new GoogleMetadata(
       InAppPurchaseMetadata.Android,
-      generateId(GoogleStoreId, name, purchaseType),
+      generateId(name, purchaseType),
       name,
       description,
       publishedState,
@@ -70,41 +75,64 @@ class ItemServiceImpl @Inject()(
     promise.future
   }
 
-  //TODO
   def createAppleItem(
     applicationName: String,
     title: String,
-    name: String,
-    itemId: String,
     description: String,
-    store: Int,
-    productProperties: AppleProductProperties,
-    languageProperties: AppleLanguageProperties,
-    pricingProperties: ApplePricingProperties,
-    durationProperties: AppleDurationProperties
-  ): Try[Item] = {
+    price: Double,
+    imageName: String, //TODO: change image name to IAP name
+    imageUrl: String
+  ): Future[Try[Item]] = {
+
+
+    def renameItemImage(newName: String): Future[String] = {
+      photosService.copyAndDelete(imageName, newName) map {res =>
+        res.s3Url
+      }
+    }
+
+    val promise = Promise[Try[Item]]
+
+    val now = DateTime.now
+    val end = now + 1.years
+    val itemId = generateId(title,InAppPurchaseMetadata.ConsumableProduct)
 
     val metadata = new AppleMetadata(
       InAppPurchaseMetadata.IOS,
-      name,
+      itemId,
       title,
       description,
-      productProperties,
-      languageProperties,
-      pricingProperties,
-      durationProperties
+      new AppleProductProperties(
+        InAppPurchaseMetadata.ConsumableProduct,
+        "", //status
+        "" //review notes
+      ),
+      new AppleLanguageProperties(
+        "English",
+        description
+      ),
+      new ApplePricingProperties(
+        ApplePricingProperties.ClearedForSale,
+        price,
+        new PricingAvailability(now.toDate, end.toDate)
+      ) 
     )
 
-    val item = new Item(
-      name,
-      description,
-      AppleStoreId,
-      metadata,
-      new Currency(RealWordCurrencyType, pricingProperties.price, null),
-      new ImageInfo("","")
-    )
-
-    applicationService.addItem(item, applicationName)
+    renameItemImage(itemId) map {url =>
+      val item = new Item(
+        title,
+        description,
+        AppleStoreId,
+        metadata,
+        new Currency(RealWordCurrencyType, price, None),
+        new ImageInfo(itemId, url)
+      )
+      promise.success(applicationService.addItem(item, applicationName))
+    } recover {
+      case err: Exception => promise.failure(err)
+    }
+    
+    promise.future
   }
 
   def createItemFromMultipartData(formData: MultipartFormData[_], applicationName: String): Future[Try[Item]] = {
@@ -152,21 +180,36 @@ class ItemServiceImpl @Inject()(
       promise.failure(new Exception(JsArray(errors).toString))
       promise.future
     } else {
-      createGooglePlayItem(
-        applicationName,
-        (data get "name").get.head,
-        (data get "description").get.head,
-        (getCurrencyTypes get (itemData("currency") \ "typeOf").as[String]).get,
-        (itemData("currency") \ "virtualCurrency").asOpt[String],
-        (itemData("currency") \ "value").as[Double],
-        (itemData("metadata") \ "publishedState").as[String],
-        (itemData("metadata") \ "purchaseType").as[String],
-        (itemData("metadata") \ "autoTranslate").as[Boolean],
-        (itemData("metadata") \ "autofill").as[Boolean],
-        (itemData("metadata") \ "language").as[String],
-        (itemData("imageInfo") \ "name").as[String],
-        (itemData("imageInfo") \ "url").as[String]
-      )
+      val osType = (itemData("metadata") \ "osType").as[String]
+      osType match {
+        case InAppPurchaseMetadata.Android => {
+          createGooglePlayItem(
+            applicationName,
+            (data get "name").get.head,
+            (data get "description").get.head,
+            (getCurrencyTypes get (itemData("currency") \ "typeOf").as[String]).get,
+            (itemData("currency") \ "virtualCurrency").asOpt[String],
+            (itemData("currency") \ "value").as[Double],
+            (itemData("metadata") \ "publishedState").as[String],
+            (itemData("metadata") \ "purchaseType").as[String],
+            (itemData("metadata") \ "autoTranslate").as[Boolean],
+            (itemData("metadata") \ "autofill").as[Boolean],
+            (itemData("metadata") \ "language").as[String],
+            (itemData("imageInfo") \ "name").as[String],
+            (itemData("imageInfo") \ "url").as[String]
+          )
+        }
+        case InAppPurchaseMetadata.IOS => {
+          createAppleItem(
+            applicationName,
+            (data get "name").get.head,
+            (data get "description").get.head,
+            (itemData("currency") \ "value").as[Double],
+            (itemData("imageInfo") \ "name").as[String],
+            (itemData("imageInfo") \ "url").as[String]
+          )
+        }
+      }
     }
   }
 
@@ -216,18 +259,20 @@ class ItemServiceImpl @Inject()(
         writer.close()
         file
       }
+      case apple: AppleMetadata => {
+        val file = new File(s"/tmp/" + item.name + ".csv")
+        val writer = new PrintWriter(file)
+
+        writer.close()
+        file
+      }
       case _ => null
     }
   }
 
-  protected def generateId(idType: Int, name: String, purchaseType: String): String = {
+  protected def generateId(name: String, purchaseType: String): String = {
     val date = DateTime.now.toString()
-
-    idType match {
-      case GoogleStoreId => s"${date.replace(":","_").replace("-","_").toLowerCase}.${name.toLowerCase.replace(" ", "_")}.$purchaseType"
-      case AppleStoreId => null //TODO
-      case _ => null
-    }
+    s"${date.replace(":","_").replace("-","_").toLowerCase}.${name.toLowerCase.replace(" ", "_")}.$purchaseType"
   }
 
   private implicit def extractFile(filePart: FilePart[_]): File = {

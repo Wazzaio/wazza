@@ -43,14 +43,6 @@
   </div>
 }
 
-@androidMetadata = {
-
-}
-
-@iOsMetadata = {
-  
-}
-
 @images = {
   <div class="form-group">
     <img id="item-logo-thumbnail" ng-src="{{itemForm.imageInfo.url}}" class="img-thumbnail" style="height: 200px">
@@ -58,11 +50,10 @@
   </div>
 }
 
-@createItemForm(metadata: Html) = {
+@createItemForm() = {
   <form class="form-vertical" enctype="multipart/form-data" ng-submit="createItem()">
     @inputText("Name", "name", true)
     @textArea("Description", "description", true)
-    @metadata
     @currency
     @images
     <input type="submit" class="btn btn-success" value="Create">
@@ -71,4 +62,4 @@
 
 }
 
-@createItemForm(androidMetadata)
+@createItemForm()

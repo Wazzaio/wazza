@@ -71,7 +71,7 @@ class ItemCRUDController @Inject()(
     }
   }
 
-  def uploadImage() = Action.async(parse.multipartFormData) { implicit request =>
+  def uploadImage = Action.async(parse.multipartFormData) { implicit request =>
     val imageUploadResult = photosService.upload(request.body.files.head)
 
     imageUploadResult map { photoResult =>

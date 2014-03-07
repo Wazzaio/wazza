@@ -51,13 +51,12 @@ case class AppleMetadata(
   override val description: String,
   productProperties: AppleProductProperties,
   languageProperties: AppleLanguageProperties,
-  pricingProperties: ApplePricingProperties,
-  durationProperties: AppleDurationProperties
+  pricingProperties: ApplePricingProperties
 
 ) extends InAppPurchaseMetadata
 
 case class AppleProductProperties(
-  productType: Int, 
+  productType: String, 
   status: String,
   reviewNotes: String
   // screenshot: TODO
@@ -65,22 +64,28 @@ case class AppleProductProperties(
 
 case class AppleLanguageProperties(
   language: String,
-  display: String,
-  description: String,
-  publicationName: String
+  //display: String,
+  description: String
+  //publicationName: String
 )
 
 case class ApplePricingProperties(
-  clearedForSale: Boolean,
+  clearedForSale: String,
   price: Double,
   pricingAvailability: PricingAvailability
 )
+
+object ApplePricingProperties {
+  lazy val ClearedForSale = "Yes"
+  lazy val NotClearedForSale = "No"
+}
 
 case class PricingAvailability(
   begin: Date,
   end: Date
 )
 
+//Not used at the moment
 case class AppleDurationProperties(
   autoRenewalDuration: Date,
   freeTrialDuration: Date,
@@ -90,7 +95,11 @@ case class AppleDurationProperties(
 object InAppPurchaseMetadata {
 
   lazy val Android = "android"
-  lazy val IOS = "ios"
+  lazy val IOS = "iOS"
+
+  lazy val ConsumableProduct = "Consumable"
+  lazy val NonConsumableProduct = "Non-Consumable"
+  lazy val NonRenewSubscription = "Non-renewing subscription"
 
   val LanguageCodes = Map(
     "Chinese" ->    "zh_TW",
@@ -136,7 +145,29 @@ object InAppPurchaseMetadata {
       }
       case apple: AppleMetadata => {
         //TODO
-        Json.obj()
+        Json.obj(
+          "osType" -> apple.osType,
+          "itemId" -> apple.itemId,
+          "title" -> apple.title,
+          "description" -> apple.description,
+          "productProperties" -> Json.obj(
+            "type" -> apple.productProperties.productType,
+            "status" -> apple.productProperties.status,
+            "reviewNotes" -> apple.productProperties.reviewNotes
+          ),
+          "languageProperties" -> Json.obj(
+            "language" -> apple.languageProperties.language,
+            "description" -> apple.description
+          ),
+          "pricingProperties" -> Json.obj(
+            "clearedForSale" -> apple.pricingProperties.clearedForSale,
+            "price" -> apple.pricingProperties.price,
+            "pricingAvailability" -> Json.obj(
+              "begin" -> apple.pricingProperties.pricingAvailability.begin.toString,
+              "end" -> apple.pricingProperties.pricingAvailability.end.toString
+            )
+          )
+        )
       }
       case _ => null
     }
@@ -171,7 +202,9 @@ object InAppPurchaseMetadata {
           (json \ "countries").as[List[String]]
         )
       }
-      case IOS => null //TODO
+      case IOS => {
+        null
+      } //TODO
     }
   }
 }

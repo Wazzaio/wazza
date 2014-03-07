@@ -41,6 +41,7 @@ angular.module('DashboardModule', ['ui.bootstrap', 'ItemModule.services'])
       $scope.applications
     );
     ApplicationStateService.updateApplicationName(_.first(data.data.applications).name);
+    ApplicationStateService.updateApplicationType(data.data.appType);
   }
 
   $scope.bootstrapFailureCallback = function(errorData){
@@ -107,7 +108,6 @@ angular.module('DashboardModule', ['ui.bootstrap', 'ItemModule.services'])
     $scope.items = _.without($scope.items, _.findWhere($scope.items, {_id: data.data}));
   }
 
-  /** TODO: show error message **/
   $scope.itemDeleteFailureCallback = function(data){
   }
 
@@ -138,12 +138,23 @@ angular.module('DashboardModule', ['ui.bootstrap', 'ItemModule.services'])
   return service;
 }])
 
-.factory('BootstrapDashboardService', ['$http','$q', function ($http, $q) {
+.factory('BootstrapDashboardService', [
+    '$http',
+    '$q',
+    'ApplicationStateService',
+    function(
+      $http,
+      $q,
+      ApplicationStateService
+    ) {
   var service = {};
 
   service.execute = function(){
+    var defaultRequest = '/dashboard/bootstrap';
+    var appName = ApplicationStateService.applicationName;
+    var urlRequest = (appName != "") ? defaultRequest + '/' + appName : defaultRequest;
     var request = $http({
-      url: '/dashboard/bootstrap',
+      url: urlRequest,
       method: 'GET'
     });
 
@@ -174,7 +185,8 @@ angular.module('DashboardModule', ['ui.bootstrap', 'ItemModule.services'])
   var service = {};
   service.applicationName = "";
   service.applicationsList = [];
-
+  service.applicationType = "";
+    
   service.updateApplicationName = function(newName){
     service.applicationName = newName;
     $rootScope.$broadcast("APPLICATION_NAME_UPDATED");
@@ -185,7 +197,11 @@ angular.module('DashboardModule', ['ui.bootstrap', 'ItemModule.services'])
     $rootScope.$broadcast("APPLICATIONS_LIST_UPDATED");
   };
 
+  service.updateApplicationType = function(newType) {
+    service.applicationType = newType;
+    $rootScope.$broadcast("APPLICATION_TYPE_UPDATED");
+  };
+
   return service;
 }])
 ;
-
