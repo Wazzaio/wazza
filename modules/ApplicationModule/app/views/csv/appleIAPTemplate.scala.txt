@@ -11,5 +11,5 @@
  begin: String,
  end: String
 )
-SKU@("\t")Product ID@("\t")Reference Name@("\t")Type@("\t")Cleared For Sale@("\t")Wholesale@("\t")Price Tier@("\t")Displayed Name@("\t")Description@("\t")Screenshot Path@("\t")Effective Date@("\t")End Date
-@sku@("\t")@id@("\t")@referenceName@("\t")@productType@("\t")@clearedForSale@("\t")@price@("\t")@displayName@("\t")@description@("\t")@begin@("\t")@end
+SKU@("\t")Product ID@("\t")Reference Name@("\t")Type@("\t")Cleared For Sale@("\t")Wholesale Price Tier@("\t")Displayed Name@("\t")Description@("\t")Screenshot Path@("\t")Effective Date@("\t")End Date
+@sku@("\t")@id@("\t")@referenceName@("\t")@productType@("\t")@clearedForSale@("\t")@price@("\t")@displayName@("\t")@description@("\t")@("\t")@begin@("\t")@end

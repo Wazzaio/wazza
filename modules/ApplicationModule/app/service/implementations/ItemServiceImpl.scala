@@ -223,20 +223,27 @@ class ItemServiceImpl @Inject()(
       str.replaceAll(";","\\;").replaceAll("\"", "\\")
     }
 
-    def parseContent(content: String): String = {
-      lazy val DescriptionSectionThreshold = 2
-      lazy val MainSeparator = ","
-      lazy val SubsectionSeparator = ';'
-      val parsedContent = content.replace("\n","").split(MainSeparator)
-      val result = ArrayBuffer[String]()
-      parsedContent.map({(el: String) =>
-        if(el.count(_ == SubsectionSeparator) > DescriptionSectionThreshold){
-          result += s"${el.dropRight(1)},"
-        } else {
-          result += s"$el,"
+    def parseContent(content: String, metadataType: String): String = {
+      metadataType match {
+        case InAppPurchaseMetadata.Android => {
+          lazy val DescriptionSectionThreshold = 2
+          lazy val MainSeparator = ","
+          lazy val SubsectionSeparator = ';'
+          val parsedContent = content.replace("\n","").split(MainSeparator)
+          val result = ArrayBuffer[String]()
+          parsedContent.map({(el: String) =>
+            if(el.count(_ == SubsectionSeparator) > DescriptionSectionThreshold){
+              result += s"${el.dropRight(1)},"
+            } else {
+              result += s"$el,"
+            }
+          })
+          result.mkString.dropRight(1)
         }
-      })
-      result.mkString.dropRight(1)
+        case InAppPurchaseMetadata.IOS => {
+          content.substring(1) //removes \n
+        }
+      }
     }
 
     def dateConverter(date: Date): String = {
@@ -261,7 +268,7 @@ class ItemServiceImpl @Inject()(
           (google.price * MultiplyDelta).toInt
         ).body
 
-        writer.write(parseContent(content))
+        writer.write(parseContent(content, InAppPurchaseMetadata.Android))
         writer.close()
         file
       }
@@ -279,10 +286,10 @@ class ItemServiceImpl @Inject()(
             apple.languageProperties.description,
             item.imageInfo.url,
             dateConverter(apple.pricingProperties.pricingAvailability.begin),
-            dateConverter(apple.pricingProperties.pricingAvailability.begin)
+            dateConverter(apple.pricingProperties.pricingAvailability.end)
             
         ).body
-        writer.write(content)
+        writer.write(parseContent(content, InAppPurchaseMetadata.IOS))
         writer.close()
         file
       }
