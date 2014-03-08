@@ -1,6 +1,7 @@
 package service.application.implementations
 
 import com.github.nscala_time.time.Imports._
+import java.text.SimpleDateFormat
 import org.joda.time.Days
 import java.util.Date
 import service.application.definitions.ItemService
@@ -238,6 +239,11 @@ class ItemServiceImpl @Inject()(
       result.mkString.dropRight(1)
     }
 
+    def dateConverter(date: Date): String = {
+      val formater = new SimpleDateFormat("yyyy-MM-dd")
+      formater.format(date)
+    }
+
     item.metadata match {
       case google: GoogleMetadata => {
         val file = new File(s"/tmp/" + item.name + ".csv")
@@ -260,9 +266,23 @@ class ItemServiceImpl @Inject()(
         file
       }
       case apple: AppleMetadata => {
-        val file = new File(s"/tmp/" + item.name + ".csv")
+        val file = new File(s"/tmp/" + apple.itemId + ".txt")
         val writer = new PrintWriter(file)
-
+        val content = views.txt.csv.appleIAPTemplate.render(
+            "sku: String",
+            apple.itemId,
+            apple.title,
+            apple.productProperties.productType,
+            apple.pricingProperties.clearedForSale,
+            apple.pricingProperties.price,
+            apple.title,
+            apple.languageProperties.description,
+            item.imageInfo.url,
+            dateConverter(apple.pricingProperties.pricingAvailability.begin),
+            dateConverter(apple.pricingProperties.pricingAvailability.begin)
+            
+        ).body
+        writer.write(content)
         writer.close()
         file
       }

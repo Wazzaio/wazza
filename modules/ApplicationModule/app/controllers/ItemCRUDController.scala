@@ -53,9 +53,13 @@ class ItemCRUDController @Inject()(
       data match {
         case Success(s) => {
           val file = itemService.generateMetadataFile(s)
+          val name = s.metadata match {
+            case google: GoogleMetadata => s"$s.name.csv"
+            case apple: AppleMetadata => s"${s.metadata.itemId}.xls"
+          }
           Ok.sendFile(
             content = file,
-            fileName = _ => s"$s.name.csv"
+            fileName = _ => name
           )
         }
         case Failure(f) => generateErrors(f.getMessage)
