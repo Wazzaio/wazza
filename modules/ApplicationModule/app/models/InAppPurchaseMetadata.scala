@@ -1,5 +1,6 @@
 package models.application
 
+import java.text.SimpleDateFormat
 import java.util.Date
 import play.api.Play.current
 import play.api.libs.json._
@@ -100,6 +101,7 @@ object InAppPurchaseMetadata {
   lazy val ConsumableProduct = "Consumable"
   lazy val NonConsumableProduct = "Non-Consumable"
   lazy val NonRenewSubscription = "Non-renewing subscription"
+  lazy val DateFormat = "MM/dd/yyyy HH:mm:ss"
 
   val LanguageCodes = Map(
     "Chinese" ->    "zh_TW",
@@ -144,7 +146,7 @@ object InAppPurchaseMetadata {
         )
       }
       case apple: AppleMetadata => {
-        //TODO
+        val df = new SimpleDateFormat(DateFormat)
         Json.obj(
           "osType" -> apple.osType,
           "itemId" -> apple.itemId,
@@ -163,8 +165,8 @@ object InAppPurchaseMetadata {
             "clearedForSale" -> apple.pricingProperties.clearedForSale,
             "price" -> apple.pricingProperties.price,
             "pricingAvailability" -> Json.obj(
-              "begin" -> apple.pricingProperties.pricingAvailability.begin.toString,
-              "end" -> apple.pricingProperties.pricingAvailability.end.toString
+              "begin" -> df.format(apple.pricingProperties.pricingAvailability.begin),
+              "end" -> df.format(apple.pricingProperties.pricingAvailability.end)
             )
           )
         )
@@ -203,8 +205,31 @@ object InAppPurchaseMetadata {
         )
       }
       case IOS => {
-        null
-      } //TODO
+        val df = new SimpleDateFormat(DateFormat)
+        new AppleMetadata(
+          (json \ "osType").as[String],
+          (json \ "itemId").as[String],
+          (json \ "title").as[String],
+          (json \ "description").as[String],
+          new AppleProductProperties(
+            (json \ "productProperties" \ "type").as[String],
+            (json \ "productProperties" \ "status").as[String],
+            (json \ "productProperties" \ "reviewNotes").as[String]
+          ),
+          new AppleLanguageProperties(
+            (json \ "languageProperties" \ "language").as[String],
+            (json \ "languageProperties" \ "description").as[String]
+          ),
+          new ApplePricingProperties(
+            (json \ "pricingProperties" \ "clearedForSale").as[String],
+            (json \ "pricingProperties" \ "price").as[Double],
+            new PricingAvailability(
+              df.parse((json \ "pricingProperties" \ "pricingAvailability" \ "begin").as[String]),
+              df.parse((json \ "pricingProperties" \ "pricingAvailability" \ "end").as[String])
+            )
+          )
+        )
+      }
     }
   }
 }
