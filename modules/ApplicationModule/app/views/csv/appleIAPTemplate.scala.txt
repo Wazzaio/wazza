@@ -4,7 +4,7 @@
  referenceName: String,
  productType: String,
  clearedForSale: String,
- price: Double,
+ price: Int,
  displayName: String,
  description: String,
  screenshotPath: String,

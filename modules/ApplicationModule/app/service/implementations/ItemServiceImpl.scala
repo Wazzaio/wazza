@@ -281,7 +281,7 @@ class ItemServiceImpl @Inject()(
             apple.title,
             apple.productProperties.productType,
             apple.pricingProperties.clearedForSale,
-            apple.pricingProperties.price,
+            apple.pricingProperties.price.toInt,
             apple.title,
             apple.languageProperties.description,
             item.imageInfo.url,
