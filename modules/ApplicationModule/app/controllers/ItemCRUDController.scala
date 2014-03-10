@@ -53,9 +53,13 @@ class ItemCRUDController @Inject()(
       data match {
         case Success(s) => {
           val file = itemService.generateMetadataFile(s)
+          val name = s.metadata match {
+            case google: GoogleMetadata => s"$s.name.csv"
+            case apple: AppleMetadata => s"${s.metadata.itemId}.xls"
+          }
           Ok.sendFile(
             content = file,
-            fileName = _ => s"$s.name.csv"
+            fileName = _ => name
           )
         }
         case Failure(f) => generateErrors(f.getMessage)
@@ -71,7 +75,7 @@ class ItemCRUDController @Inject()(
     }
   }
 
-  def uploadImage() = Action.async(parse.multipartFormData) { implicit request =>
+  def uploadImage = Action.async(parse.multipartFormData) { implicit request =>
     val imageUploadResult = photosService.upload(request.body.files.head)
 
     imageUploadResult map { photoResult =>

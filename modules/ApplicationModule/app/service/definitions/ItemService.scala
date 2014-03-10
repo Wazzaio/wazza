@@ -24,18 +24,14 @@ trait ItemService {
 		imageUrl: String
 	): Future[Try[Item]]
 
-	def createAppleItem(
-		applicationName: String,
-		title: String,
-		name: String,
-		itemId: String,
-  	description: String,
-  	store: Int,
-  	productProperties: AppleProductProperties,
-	  languageProperties: AppleLanguageProperties,
-	  pricingProperties: ApplePricingProperties,
-	  durationProperties: AppleDurationProperties
-	): Try[Item]
+  def createAppleItem(
+    applicationName: String,
+    title: String,
+    description: String,
+    price: Double,
+    imageName: String,
+    imageUrl: String
+  ): Future[Try[Item]]
 
 	def createItemFromMultipartData(data: MultipartFormData[_], applicationName: String): Future[Try[Item]]
 
@@ -43,6 +39,6 @@ trait ItemService {
 
 	def generateMetadataFile(item: Item): File
 
-	protected def generateId(idType: Int, name: String, purchaseType: String): String
+	protected def generateId(name: String, purchaseType: String): String
 		
 }

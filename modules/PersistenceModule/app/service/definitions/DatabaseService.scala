@@ -23,7 +23,7 @@ trait DatabaseService {
 
   def exists(key: String, value: String): Boolean
 
-  def get(key: String, value: String): Option[JsValue]
+  def get(key: String, value: String, projection: String = null): Option[JsValue]
 
   def insert(model: JsValue): Try[Unit]
 
@@ -55,7 +55,8 @@ trait DatabaseService {
     docIdKey: String,
     docIdValue: String,
     arrayKey: String,
-    limit: Option[Int]
+    limit: Option[Int],
+    queryFields: Map[String, String] = null
   ): List[JsValue]
 
   def addElementToArray[T <: Any](

@@ -75,9 +75,15 @@ class MongoDatabaseService extends DatabaseService {
     }
   }
 
-  def get(key: String, value: String): Option[JsValue] = {
+  def get(key: String, value: String, projection: String = null): Option[JsValue] = {
     val query = MongoDBObject(key -> value)
-    this.collection.findOne(query) match {
+    val proj = if(projection != null) {
+      MongoDBObject(projection -> 1)
+    } else {
+      MongoDBObject()
+    }
+
+    this.collection.findOne(query, proj) match {
       case Some(obj) => {       
         Some(Json.parse(obj.toString))
       }
@@ -148,9 +154,16 @@ class MongoDatabaseService extends DatabaseService {
     docIdKey: String,
     docIdValue: String,
     arrayKey: String,
-    limit: Option[Int]
+    limit: Option[Int],
+    queryFields: Map[String, String] = null
   ): List[JsValue] = {
     val query = MongoDBObject(docIdKey -> docIdValue)
+    if(queryFields != null) {
+      for((k,v) <- queryFields) {
+        query += (k -> v)
+      }
+    }
+
     val projection = MongoDBObject(arrayKey -> 1)
     limit match {
       case Some(maxNumberElements) => {

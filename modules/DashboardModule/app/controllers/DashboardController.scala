@@ -20,7 +20,7 @@ class DashboardController @Inject()(
   def index() = HasToken() {token => userId => implicit request =>
     val applications = userService.getApplications(userId)
     if(applications.isEmpty){
-      Ok(views.html.dashboard(false, "", null, Nil, Nil))
+      Ok(views.html.dashboard(false, "", "",null, Nil, Nil))
     } else {
       request.body.asJson match {
         case Some(json) => {
@@ -31,6 +31,7 @@ class DashboardController @Inject()(
           Ok(views.html.dashboard(
             true,
             application.name,
+            application.appType.get,
             application.credentials,
             application.virtualCurrencies,
             application.items
@@ -41,16 +42,24 @@ class DashboardController @Inject()(
   }
 
   // add optional argument: application name
-  def bootstrapDashboard() = HasToken() {token => userId => implicit request =>
+  def bootstrapDashboard(appName: String) = HasToken() {token => userId => implicit request =>
     val applications = userService.getApplications(userId)
     if(applications.isEmpty){
       //TODO: do not send bad request but a note saying that we dont have applications. then redirect to new application page
       BadRequest
     } else {
-      val application = applicationService.find(applications.head).get
+      val application = if(appName == null) {
+        applicationService.find(applications.head).get
+      } else {
+        applicationService.find(applications.find{(a: String) =>
+          a == appName
+        }.get).get
+      }
+
       Ok(
         Json.obj(
           "name" -> application.name,
+          "appType" -> application.appType.get,
           "credentials" -> Json.obj(
             "apiKey" -> application.credentials.apiKey,
             "sdkKey" -> application.credentials.sdkKey
