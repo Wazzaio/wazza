@@ -28,7 +28,12 @@ trait ApplicationService {
 
   def getItem(itemId: String, applicationName: String): Option[Item]
 
-  def getItems(applicationName: String, offset: Int = 0, projection: String = null): List[Item]
+  def getItems(
+    applicationName: String,
+    offset: Int = 0,
+    projection: String = null,
+    queryFields: Map[String,String] = null
+  ): List[Item]
 
   def itemExists(item: String, applicationName: String): Boolean
 

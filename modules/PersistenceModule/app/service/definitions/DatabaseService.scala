@@ -55,7 +55,8 @@ trait DatabaseService {
     docIdKey: String,
     docIdValue: String,
     arrayKey: String,
-    limit: Option[Int]
+    limit: Option[Int],
+    queryFields: Map[String, String] = null
   ): List[JsValue]
 
   def addElementToArray[T <: Any](

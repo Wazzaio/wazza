@@ -34,7 +34,7 @@ class ItemsController @Inject()(
     applicationService.getItems(applicationName, getOffsetValue(request))
   }
 
-  def getItems(applicationName: String) = ApiSecurityHandler() {implicit request =>
+  def getItems(applicationName: String, osType: String) = ApiSecurityHandler() {implicit request =>
     val result = applicationService.getItems(applicationName, getOffsetValue(request))
     Ok(JsArray(result.map((item: Item) =>{
       Json.obj("id" -> item.name)
@@ -48,8 +48,13 @@ class ItemsController @Inject()(
     ))
   }
 
-  def getItemsWithDetails(applicationName: String) = ApiSecurityHandler() {implicit request =>
-    val result = applicationService.getItems(applicationName, getOffsetValue(request))
+  def getItemsWithDetails(applicationName: String, osType: String) = ApiSecurityHandler() {implicit request =>
+    val result = applicationService.getItems(
+      applicationName,
+      getOffsetValue(request),
+      null,
+      Map("items.metadata.osType" -> osType)
+    )
     Ok(new JsArray(
       result.map{item => Item.convertToJson(item)}.toSeq
     ))
@@ -62,7 +67,7 @@ class ItemsController @Inject()(
         purchase.itemId,
         purchase.applicationName
       )) {
-        purchaseService.save(purchase)match {
+        purchaseService.save(purchase) match {
           case Success(_) => Ok
           case Failure(_) => BadRequest
         }

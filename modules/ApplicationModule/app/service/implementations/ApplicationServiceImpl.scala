@@ -1,5 +1,6 @@
 package service.application.implementations
 
+import play.api.libs.json.JsArray
 import play.api.libs.json.JsObject
 import service.application.definitions._
 import models.application._
@@ -102,20 +103,40 @@ class ApplicationServiceImpl @Inject()(
       }
     }
 
-    def getItems(applicationName: String, offset: Int = 0, projection: String = null): List[Item] = {
-        // WARNING: this is inefficient because it loads all items from DB. For now, just works... to be fixed later
-        this.find(applicationName) match {
-            case Some(application) => application.items.drop(offset).take(ItemBatch)
-            case None => Nil
-        }
-    }
+  def getItems(
+    applicationName: String,
+    offset: Int = 0,
+    projection: String = null,
+    queryFields: Map[String,String] = null
+  ): List[Item] = {
+    this.find(applicationName) match {
+      case Some(application) => {
+        val items = databaseService.getElementsOfArray(
+          WazzaApplication.Key,
+          applicationName,
+          WazzaApplication.ItemsId,
+          Some(ItemBatch),
+          queryFields
+        )
 
-    def itemExists(itemName: String, applicationName: String): Boolean = {
-      this.getItem(itemName, applicationName) match {
-        case Some(_) => true
-        case _ => false
+        if(items.isEmpty) {
+          List[Item]()
+        } else {
+          (items.head \ WazzaApplication.ItemsId).as[JsArray].value.map{item =>
+            Item.buildFromJson(item)
+          }.toList
+        }
       }
+      case None => Nil
     }
+  }
+
+  def itemExists(itemName: String, applicationName: String): Boolean = {
+    this.getItem(itemName, applicationName) match {
+      case Some(_) => true
+      case _ => false
+    }
+  }
 
     def deleteItem(itemId: String, applicationName: String, imageName: String): Future[Unit] = {
       val promise = Promise[Unit]

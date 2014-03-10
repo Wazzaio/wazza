@@ -154,9 +154,16 @@ class MongoDatabaseService extends DatabaseService {
     docIdKey: String,
     docIdValue: String,
     arrayKey: String,
-    limit: Option[Int]
+    limit: Option[Int],
+    queryFields: Map[String, String] = null
   ): List[JsValue] = {
     val query = MongoDBObject(docIdKey -> docIdValue)
+    if(queryFields != null) {
+      for((k,v) <- queryFields) {
+        query += (k -> v)
+      }
+    }
+
     val projection = MongoDBObject(arrayKey -> 1)
     limit match {
       case Some(maxNumberElements) => {
