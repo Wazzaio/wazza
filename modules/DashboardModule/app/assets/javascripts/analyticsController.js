@@ -146,8 +146,10 @@ dashboard
                     x: -20 //center
                 },
                 xAxis: {
-                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                  type: 'datetime',
+                  minRange: 7 * 24 * 3600000 // fourteen days
+                    // categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    // 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
                 },
                 yAxis: [{ // Primary yAxis
                     title: {
@@ -157,7 +159,7 @@ dashboard
                         }
                     },
                     labels: {
-                        format: '{value} k',
+                        format: '{value}',
                         style: {
                             color: Highcharts.getOptions().colors[1]
                         }
@@ -170,7 +172,7 @@ dashboard
                         }
                     },
                     labels: {
-                        format: '{value} k',
+                        format: '{value}',
                         style: {
                             color: Highcharts.getOptions().colors[0]
                         }
@@ -189,15 +191,36 @@ dashboard
                 series: [{
                     name: 'Total Downloads',
                     type: 'spline',
-                    data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+                    pointInterval: 24 * 3600 * 7 *24,
+                    pointStart: 1401289200,
+                    data: [
+                        0, 0, 0, 1, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0
+                        , 0, 0, 0, 0, 0, 0, 0, 0
+
+                        ]
             }, {
                     name: 'Active Users',
                     type: 'spline',
-                    data: [3.9, 4.2, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 4.8]
+                    pointInterval: 24 * 3600 * 7 *24,
+                    pointStart: 1401289200,
+                    data: [
+                        0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        , 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0
+                        , 0, 0, 0, 0, 0, 0, 0, 0
+
+                        ]
             }, {
                     name: 'Active Users with IAP',
                     type: 'spline',
-                    data: [-0.2, 0.8, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 2.5]
+                    pointInterval: 24 * 3600 * 7 *24,
+                    pointStart: 1401289200,
+                    data: [
+                        0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        , 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0
+                        , 0, 0, 0, 0, 0, 0, 0, 0
+
+                        ]
             }]
             });
         });
@@ -211,8 +234,8 @@ dashboard
                     text: 'Active users and IAPs'
                 },
                 xAxis: [{
-                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+type: 'datetime',
+minRange: 7 * 24 * 3600000 // fourteen days
         }],
                 yAxis: [{ // Primary yAxis
                     labels: {
@@ -238,7 +261,7 @@ dashboard
                         }
                     },
                     labels: {
-                        format: '{value} k',
+                        format: '{value} ',
                         style: {
                             color: Highcharts.getOptions().colors[1]
                         }
@@ -253,7 +276,7 @@ dashboard
                         }
                     },
                     labels: {
-                        format: '{value} k USD',
+                        format: '{value} USD',
                         style: {
                             color: Highcharts.getOptions().colors[2]
                         }
@@ -273,30 +296,45 @@ dashboard
                     name: 'Active users with IAPs',
                     type: 'spline',
                     yAxis: 1,
-                    data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+                    data: [
+                        0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        , 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0
+                        , 0, 0, 0, 0, 0, 0, 0, 0
+
+                        ],
                     tooltip: {
-                        valueSuffix: ' k'
+                        valueSuffix: ' '
                     }
 
         }, {
                     name: 'IAPs/month',
                     type: 'spline',
                     yAxis: 2,
-                    data: [1016, 1016, 1015.9, 1015.5, 1012.3, 1009.5, 1009.6, 1010.2, 1013.1, 1016.9, 1018.2, 1016.7],
+                    data: [
+                        0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        , 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0
+                        , 0, 0, 0, 0, 0, 0, 0, 0
+
+                        ],
                     marker: {
                         enabled: false
                     },
                     dashStyle: 'shortdot',
                     tooltip: {
-                        valueSuffix: ' mb'
+                        valueSuffix: ' '
                     }
 
         }, {
                     name: 'Revenue/month',
                     type: 'spline',
-                    data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
+                    data: [
+                        0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        , 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0
+                        , 0, 0, 0, 0, 0, 0, 0, 0
+
+                        ],
                     tooltip: {
-                        valueSuffix: ' °C'
+                        valueSuffix: ' USD'
                     }
         }]
             });
@@ -338,7 +376,7 @@ dashboard
                         }
                     },
                     labels: {
-                        format: '{value} k USD',
+                        format: '{value} USD',
                         style: {
                             color: Highcharts.getOptions().colors[0]
                         }
@@ -358,22 +396,29 @@ dashboard
                     name: 'Session time',
                     type: 'spline',
                     yAxis: 1,
-                    data: [14, 13.8, 19, 29, 36.4, 43, 49.6, 48.2, 40.2, 28.2, 17.2, 5],
+                    data: [14, 13.8, 19, 29, 36.4, 43, 49.6, 0, 40.2, 28.2, 17.2, 10,
+                    14, 19, 19, 29, 36.4, 0, 49.6, 48.2, 0, 28.2, 17.2, 10,
+                    14, 13.8, 19, 29, 36.4, 14, 12.8, 19, 29, 40.4, 14, 15.8, 18, 29, 36.4],
                     tooltip: {
-                        valueSuffix: ' k'
+                        valueSuffix: ' '
                     }
 
         }, {
                     name: 'Revenue/session',
                     type: 'spline',
                     yAxis: 0,
-                    data: [1016, 1016, 1015.9, 1015.5, 1012.3, 1009.5, 1009.6, 1010.2, 1013.1, 1016.9, 1018.2, 1016.7],
+                    data: [
+                        0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                        , 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0
+                        , 0, 0, 0, 0, 0, 0, 0, 0
+
+                        ],
                     marker: {
                         enabled: false
                     },
                     dashStyle: 'shortdot',
                     tooltip: {
-                        valueSuffix: ' mb'
+                        valueSuffix: ' USD'
                     }
 
         }]
@@ -484,10 +529,10 @@ dashboard
 $(function () {
 
     $.getJSON('http://www.highcharts.com/samples/data/jsonp.php?filename=world-population-density.json&callback=?', function (data) {
-        
+
         // Initiate the chart
         $('#map').highcharts('Map', {
-            
+
             title : {
                 text : 'Population density by country (/km²)'
             },

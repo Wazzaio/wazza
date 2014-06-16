@@ -60,12 +60,14 @@ var dashboard = angular.module('DashboardModule', ['ItemModule.services'])
                     },
                     xAxis: {
                         type: 'datetime',
-                        minRange: 14 * 24 * 3600000 // fourteen days
+                        minRange: 7 * 24 * 3600000 // fourteen days
+
                     },
                     yAxis: {
                         title: {
-                            text: 'Revenue (in Millions of USD)'
-                        }
+                            text: 'Revenue (in USD)'
+                        },
+                        min: 0
                     },
                     legend: {
                         enabled: false
@@ -98,12 +100,16 @@ var dashboard = angular.module('DashboardModule', ['ItemModule.services'])
                     },
 
                     series: [{
-                        type: 'area',
+                        type: 'line',
                         name: 'USD',
-                        pointInterval: 24 * 3600 * 1000,
-                        pointStart: 1328004400000,
+                        pointInterval: 24 * 3600 * 7 *24,
+                        pointStart: 1401289200,
                         data: [
-                            0.8446, 0.8445, 0.8444, 0.8451, 0.8418, 0.8264, 0.8258, 0.8232, 0.8233, 0.8258,
+                            0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                            , 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0
+                            , 0, 0, 0, 0, 0, 0, 0, 0
+
+                            ]/* 0.8451, 0.8418, 0.8264, 0.8258, 0.8232, 0.8233, 0.8258,
                             0.8283, 0.8278, 0.8256, 0.8292, 0.8239, 0.8239, 0.8245, 0.8265, 0.8261, 0.8269,
                             0.8273, 0.8244, 0.8244, 0.8172, 0.8139, 0.8146, 0.8164, 0.82, 0.8269, 0.8269,
                             0.8269, 0.8258, 0.8247, 0.8286, 0.8289, 0.8316, 0.832, 0.8333, 0.8352, 0.8357,
@@ -213,7 +219,7 @@ var dashboard = angular.module('DashboardModule', ['ItemModule.services'])
                             0.7855, 0.7866, 0.7865, 0.7795, 0.7758, 0.7717, 0.761, 0.7497, 0.7471, 0.7473,
                             0.7407, 0.7288, 0.7074, 0.6927, 0.7083, 0.7191, 0.719, 0.7153, 0.7156, 0.7158,
                             0.714, 0.7119, 0.7129, 0.7129, 0.7049, 0.7095
-                        ]
+                        ]*/
                     }]
                 });
             });
