@@ -68,14 +68,6 @@ dashboard
                 }
 
             },
-            "boolea": true,
-            "null": null,
-            "number": 123,
-            "object": {
-                "a": "b",
-                "c": "d",
-                "e": "f"
-            },
             "string": "Hello World"
         }
 
@@ -135,7 +127,7 @@ dashboard
                             textShadow: '0 0 3px black'
                         }
                     }
-      }]
+                }]
             });
         });
 
@@ -222,6 +214,7 @@ dashboard
 
                         ]
             }]
+
             });
         });
 
@@ -234,6 +227,7 @@ dashboard
                     text: 'Active users and IAPs'
                 },
                 xAxis: [{
+
 type: 'datetime',
 minRange: 7 * 24 * 3600000 // fourteen days
         }],
@@ -283,6 +277,7 @@ minRange: 7 * 24 * 3600000 // fourteen days
                     },
                     opposite: true
         }],
+
                 tooltip: {
                     shared: true
                 },
@@ -337,6 +332,7 @@ minRange: 7 * 24 * 3600000 // fourteen days
                         valueSuffix: ' USD'
                     }
         }]
+
             });
         });
 
@@ -351,7 +347,7 @@ minRange: 7 * 24 * 3600000 // fourteen days
                 xAxis: [{
                     categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        }],
+                }],
                 yAxis: [{ // Primary yAxis
                     labels: {
                         format: '{value}',
@@ -383,6 +379,7 @@ minRange: 7 * 24 * 3600000 // fourteen days
                     }
 
         }],
+
                 tooltip: {
                     shared: true
                 },
@@ -393,6 +390,7 @@ minRange: 7 * 24 * 3600000 // fourteen days
                     borderWidth: 0
                 },
                 series: [{
+
                     name: 'Session time',
                     type: 'spline',
                     yAxis: 1,
@@ -422,6 +420,7 @@ minRange: 7 * 24 * 3600000 // fourteen days
                     }
 
         }]
+
             });
         });
 
