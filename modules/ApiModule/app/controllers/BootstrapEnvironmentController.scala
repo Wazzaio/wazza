@@ -6,7 +6,7 @@ import play.api.mvc._
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 import controllers.security._
-import service.security.definitions.{TokenManagerService}
+import service.security.definitions._
 import models.application._
 import service.application.definitions._
 import service.user.definitions._
@@ -23,17 +23,19 @@ import scala.util.Random
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
+import SecretGeneratorServiceContext._
 
 class BootstrapEnvironmentController @Inject()(
   applicationService: ApplicationService,
   userService: UserService,
   purchaseService: PurchaseService,
-  mobileSessionService: MobileSessionService
+  mobileSessionService: MobileSessionService,
+  secretGeneratorService: SecretGeneratorService
 ) extends Controller {
 
   private lazy val LowerPrice = 1.99
   private lazy val UpperPrice = 5.99
-  private lazy val NumberMobileUsers = 70
+  private lazy val NumberMobileUsers = 1000
   private lazy val NumberPurchases = 70
   private lazy val NumberItems = 10
 
@@ -42,7 +44,11 @@ class BootstrapEnvironmentController @Inject()(
     val imageName = "image-test"
     val packageName = "com.example"
     val appType = WazzaApplication.applicationTypes.last
-    val credentials = new Credentials("id", "key", "sdk")
+    val credentials = new Credentials(
+      secretGeneratorService.generateSecret(Id),
+      secretGeneratorService.generateSecret(ApiKey),
+      secretGeneratorService.generateSecret(ApiKey)
+    )
     val items = List[Item]()
     val virtualCurrencies = List[VirtualCurrency]()
   }
@@ -84,7 +90,6 @@ class BootstrapEnvironmentController @Inject()(
           new DeviceInfo("osType", "name", "version", "model"),
           List[String]() //List of purchases id's
         )
-        //println(session)
         mobileSessionService.insert(companyName, applicationName, session)/** flatMap {r =>
           val makePurchases = willMakePurchases
           //println(makePurchases)

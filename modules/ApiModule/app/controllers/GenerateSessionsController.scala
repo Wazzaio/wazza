@@ -31,7 +31,7 @@ class GenerateSessionsController @Inject()(
   mobileSessionService: MobileSessionService
 ) extends Controller {
 
-  private lazy val NumberMobileUsers = 70
+  private lazy val NumberMobileUsers = 1000
   
   private def generateSessions(companyName: String, applicationName: String): Future[Boolean] = {
     val end = new LocalDate()
