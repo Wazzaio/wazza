@@ -33,7 +33,7 @@ class GeneratePurchasesController @Inject()(
 
   private lazy val LowerPrice = 1.99
   private lazy val UpperPrice = 5.99
-  private lazy val NumberMobileUsers = 70
+  private lazy val NumberMobileUsers = 1000
   private lazy val NumberPurchases = 70
   private lazy val NumberItems = 10
 
