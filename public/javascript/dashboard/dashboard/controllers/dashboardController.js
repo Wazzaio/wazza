@@ -10,6 +10,8 @@ dashboard.controller('DashboardController', [
     "$q",
     "SelectedPlatformsChange",
     "DashboardCache",
+    "DashboardViewChanges",
+    "DashboardShowPlatformDetails",
     function (
         $scope,
         $anchorScroll,
@@ -21,8 +23,24 @@ dashboard.controller('DashboardController', [
         KpiModel,
         $q,
         SelectedPlatformsChange,
-        DashboardCache
+        DashboardCache,
+        DashboardViewChanges,
+        DashboardShowPlatformDetails
         ) {
+        
+        /** Modes: 0 = chart ; 1 = numbers **/
+        $scope.viewMode = 1;
+        $scope.showDetails = true;
+
+        var updateView = function(ev, data) {
+          $scope.viewMode = data.newView;
+        };
+        $scope.$on(DashboardViewChanges, updateView);
+
+        var showHidePlatformDetails = function(ev, data) {
+          $scope.showDetails = data.value;
+        };
+        $scope.$on(DashboardShowPlatformDetails, showHidePlatformDetails);
 
         /** Revenue KPIs **/
         $scope.totalRevenue = new KpiModel("Total Revenue", "analytics.revenue");
@@ -60,10 +78,7 @@ dashboard.controller('DashboardController', [
             GetKPIService.getTotalKpiData(companyName, app, begin, end, "avgPurchasesUser", $scope.platforms),
             GetKPIService.getTotalKpiData(companyName, app, begin, end, "purchasesPerSession", $scope.platforms),
             GetKPIService.getTotalKpiData(companyName, app, begin, end, "avgTimeBetweenPurchases", $scope.platforms),
-              /*
-            
-            GetKPIService.getTotalKpiData(companyName, app, begin, end, "avgTime1stPurchase"),
-            */
+            GetKPIService.getTotalKpiData(companyName, app, begin, end, "avgTime1stPurchase", $scope.platforms),
             ]).then(function(res) {
               $scope.totalRevenue.updateKpiValue(res[0].data);
               $scope.arpu.updateKpiValue(res[1].data);
@@ -71,10 +86,9 @@ dashboard.controller('DashboardController', [
               $scope.ltv.updateKpiValue(res[3].data);
               $scope.payingUsers.updateKpiValue(res[4].data);
               $scope.avgPurchasesUser.updateKpiValue(res[5].data);
-              $scope.purchasesPerSession.updateKpiValue(res[5].data);
-              $scope.avgTimeBetweenPurchases.updateKpiValue(res[6].data);
-              /*  $scope.avgTimeFirstPurchase.updateKpiValue(extractValue(6, 'value'), extractValue(6, 'delta'))
-                */
+              $scope.purchasesPerSession.updateKpiValue(res[6].data);
+              $scope.avgTimeBetweenPurchases.updateKpiValue(res[7].data);
+              $scope.avgTimeFirstPurchase.updateKpiValue(res[8].data);
             });
         };
         

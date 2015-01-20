@@ -21,6 +21,10 @@ broadcastEvents.value('AvgRevenueSessionPlatformsChanged','analytics.avgRevenueS
 broadcastEvents.value('ATBPPlatformsChanged','analytics.avgTimebetweenPurchase-platformChange');
 broadcastEvents.value('AT1PPlatformsChanged','analytics.avgTimeFirstPurchase-platformChange');
 broadcastEvents.value('PurchasesPerUserPlatformsChanged','analytics.avgPurchasesUser-platformChange');
-broadcastEvents.value('LtvDatePlatformsChanged','analytics.ltv-platformChange');
+broadcastEvents.value('LtvPlatformsChanged','analytics.ltv-platformChange');
 broadcastEvents.value('PayingUsersPlatformsChanged','analytics.payingUsers-platformChange');
 broadcastEvents.value('PurchaseDatePlatformsChanged','analytics.purchasesPerSession-platformChange');
+
+/** Dashboard view changes **/
+broadcastEvents.value("DashboardViewChanges", 1);
+broadcastEvents.value("DashboardShowPlatformDetails", 2);
