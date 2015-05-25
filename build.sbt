@@ -45,64 +45,66 @@ resolvers ++= Seq[Resolver](
     "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
   )
 
+pipelineStages := Seq(closure, cssCompress, htmlMinifier, imagemin, gzip) //sbt-compat
+
 lazy val mySettings = Seq("-unchecked", "-deprecation", "-feature", "-language:reflectiveCalls", "-language:postfixOps", "-optimize", "-Xlint", "-Ywarn-adapted-args" )//, "-Xfatal-warnings")
 
 lazy val common = Project("common", file("modules/common"))
-  .enablePlugins(play.PlayScala)
+  .enablePlugins(play.PlayScala).enablePlugins(SbtWeb)
   .settings(scalacOptions ++= mySettings, version := appVersion, libraryDependencies ++= dependencies)
 
 lazy val dashboard = Project("dashboard", file("modules/dashboard"))
-  .enablePlugins(play.PlayScala)
+  .enablePlugins(play.PlayScala).enablePlugins(SbtWeb)
   .dependsOn(user, application)
   .settings(scalacOptions ++= mySettings, version := appVersion, libraryDependencies ++= dependencies)
 
 lazy val user = Project("user", file("modules/user"))
-  .enablePlugins(play.PlayScala)
+  .enablePlugins(play.PlayScala).enablePlugins(SbtWeb)
   .dependsOn(security, persistence, common, payments)
   .settings(scalacOptions ++= mySettings, version := appVersion, libraryDependencies ++= dependencies)
 
 lazy val application = Project("application", file("modules/application"))
-  .enablePlugins(play.PlayScala)
+  .enablePlugins(play.PlayScala).enablePlugins(SbtWeb)
   .dependsOn(persistence, security, aws, user, notifications)
   .settings(scalacOptions ++= mySettings, version := appVersion, libraryDependencies ++= dependencies)
 
 lazy val security = Project("security", file("modules/security"))
-  .enablePlugins(play.PlayScala)
+  .enablePlugins(play.PlayScala).enablePlugins(SbtWeb)
   .dependsOn(persistence)
   .settings(scalacOptions ++= mySettings, version := appVersion, libraryDependencies ++= dependencies)
 
 lazy val aws = Project("aws", file("modules/aws"))
-  .enablePlugins(play.PlayScala)
+  .enablePlugins(play.PlayScala).enablePlugins(SbtWeb)
   .settings(scalacOptions ++= mySettings, version := appVersion, libraryDependencies ++= dependencies)
 
 lazy val api = Project("api", file("modules/api"))
-  .enablePlugins(play.PlayScala)
+  .enablePlugins(play.PlayScala).enablePlugins(SbtWeb)
   .dependsOn(security, aws, user, application, payments, common)
   .settings(scalacOptions ++= mySettings, version := appVersion, libraryDependencies ++= dependencies)
 
 lazy val persistence = Project("persistence", file("modules/persistence"))
-  .enablePlugins(play.PlayScala)
+  .enablePlugins(play.PlayScala).enablePlugins(SbtWeb)
   .dependsOn(common)
   .settings(scalacOptions ++= mySettings, version := appVersion, libraryDependencies ++= dependencies)
 
 lazy val analytics = Project("analytics",file("modules/analytics"))
-  .enablePlugins(play.PlayScala)
+  .enablePlugins(play.PlayScala).enablePlugins(SbtWeb)
   .dependsOn(user, application, persistence, security, payments)
   .settings(scalacOptions ++= mySettings, version := appVersion, libraryDependencies ++= dependencies)
 
 lazy val notifications = Project("notifications",file("modules/notifications"))
-  .enablePlugins(play.PlayScala)
+  .enablePlugins(play.PlayScala).enablePlugins(SbtWeb)
   .dependsOn(common)
   .settings(scalacOptions ++= mySettings, version := appVersion, libraryDependencies ++= dependencies)
 
 lazy val payments = Project("payments",file("modules/payments"))
-  .enablePlugins(play.PlayScala)
+  .enablePlugins(play.PlayScala).enablePlugins(SbtWeb)
   .dependsOn(common)
   .settings(scalacOptions ++= mySettings, version := appVersion, libraryDependencies ++= dependencies)
 
 // Root
 lazy val home = Project(appName, file("."))
-  .enablePlugins(play.PlayScala)
+  .enablePlugins(play.PlayScala).enablePlugins(SbtWeb)
   .aggregate(dashboard,
     user,
     application,
