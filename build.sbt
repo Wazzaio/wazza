@@ -23,7 +23,7 @@ lazy val dependencies = Seq(
   "org.webjars" % "angular-local-storage" % "0.1.5",
   "org.webjars" % "angular-ui-bootstrap" % "0.13.0",
   "org.webjars" % "angular-ui-router" % "0.2.14",
-  "org.webjars" % "angularjs" % "1.3.15",
+  "org.webjars" % "angularjs" % "1.4.0",
   "org.webjars" % "bootstrap" % "3.3.4",
   "org.webjars" % "chartjs" % "1.0.2",
   "org.webjars" % "font-awesome" % "4.3.0-2",
