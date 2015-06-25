@@ -104,6 +104,12 @@ config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProv
             controller: 'DashboardController'
         })
 
+        .state('analytics.products', {
+            url: "^/",
+            templateUrl: '/dashboard/product/list',
+            controller: 'ProductListController'
+        })
+
       //analytics - metrics
         .state('analytics.revenue', {
             url: "^/",

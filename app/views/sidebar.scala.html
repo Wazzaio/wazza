@@ -14,6 +14,9 @@
         <li class="sidebar-list">
             <a href="" ng-click="onDashboardClick()">Dashboard <span class="menu-icon fa fa-tachometer"></span></a>
         </li>
+        <li class="sidebar-list">
+            <a href="" ng-click="onProductsClick()">Products <span class="menu-icon fa fa-shopping-cart"></span></a>
+        </li>
         <li class="sidebar-list" ng-repeat="option in dashboardOptions" ng-show="showDashboardOptions">
             <a href="" class="childOptions" ng-click="selectDashboardSection(option.link)">{{option.name}}</a>
         </li>

@@ -76,6 +76,10 @@ application.controller('SidebarController', [
     $scope.onAnalyticsClick = function(){
       $scope.showAnalyticsOptions = !$scope.showAnalyticsOptions;
     };
+
+    $scope.onProductsClick = function(){
+      $scope.followLink('analytics.products');
+    };
       
     $scope.experimental = function(state){
       swal({
