@@ -1,9 +1,11 @@
 dashboard.controller('ProductListController', [
   '$scope',
-  function($scope) {
+  'ApplicationStateService',
+  function(
+    $scope,
+    ApplicationStateService
+  ) {
 
-    console.log("ProductListController");
-
-      
-}]);
+    ApplicationStateService.setPath("Products")
+  }]);
 

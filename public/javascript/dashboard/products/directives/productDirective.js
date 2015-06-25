@@ -6,7 +6,7 @@ dashboard.directive('product', ['$state', function($state) {
       },
       controller: function($scope) {
         $scope.switchDetailedView = function(state) {
-          $state.go(state);
+          $state.go('analytics.productDetails');
         };
       },
       templateUrl: '/dashboard/product/directive'

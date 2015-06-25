@@ -18,7 +18,7 @@ GET     /analytics                    @controllers.dashboard.AnalyticsController
 
 GET    /product/directive             @controllers.dashboard.ProductsController.product
 GET    /product/list                  @controllers.dashboard.ProductsController.index
-GET    /product/details/:id           @controllers.dashboard.ProductsController.details(id: String)
+GET    /product/details               @controllers.dashboard.ProductsController.details
     
 # inventory
 #GET     /inventory                    @controllers.dashboard.InventoryController.inventory

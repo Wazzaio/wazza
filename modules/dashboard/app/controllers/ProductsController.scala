@@ -17,7 +17,7 @@ class ProductsController extends Controller {
     Ok(views.html.products.productCardInfo())
   }
 
-  def details(productId: String) = UserAuthenticationAction {implicit request =>
+  def details = UserAuthenticationAction {implicit request =>
     Ok(views.html.products.productDetails())
   }
 }
