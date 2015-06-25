@@ -5,33 +5,32 @@ lazy val appVersion = "alpha"
 scalaVersion := "2.10.5"
 
 lazy val dependencies = Seq(
-  anorm,
   cache,
   filters,
   ws,
-  "com.amazonaws" % "aws-java-sdk" % "1.9.37",
-  "com.google.inject" % "guice" % "3.0",
+  "com.amazonaws" % "aws-java-sdk" % "1.10.2",
+  "com.google.inject" % "guice" % "4.0",
   "com.typesafe.akka" %% "akka-actor" % "2.3.11",
   "com.typesafe.akka" %% "akka-slf4j" % "2.3.11",
   "com.tzavellas" %% "sse-guice" % "0.7.2",
   "commons-codec" % "commons-codec" % "1.10",
   "commons-validator" % "commons-validator" % "1.4.1",
   "org.mindrot" % "jbcrypt" % "0.3m",
-  "org.mongodb" % "casbah-commons_2.10" % "2.8.1",
-  "org.mongodb" % "casbah_2.10" % "2.8.1",
+  "org.mongodb" %% "casbah-commons" % "2.8.1",
+  "org.mongodb" %% "casbah" % "2.8.1",
   "org.webjars" % "angular-chart.js" % "0.7.1",
   "org.webjars" % "angular-local-storage" % "0.1.5",
   "org.webjars" % "angular-ui-bootstrap" % "0.13.0",
-  "org.webjars" % "angular-ui-router" % "0.2.14",
+  "org.webjars" % "angular-ui-router" % "0.2.15",
   "org.webjars" % "angularjs" % "1.4.0",
-  "org.webjars" % "bootstrap" % "3.3.4",
+  "org.webjars" % "bootstrap" % "3.3.5",
   "org.webjars" % "chartjs" % "1.0.2",
   "org.webjars" % "font-awesome" % "4.3.0-2",
   "org.webjars" % "jquery" % "1.11.3",
-  "org.webjars" % "momentjs" % "2.10.2",
+  "org.webjars" % "momentjs" % "2.10.3",
   "org.webjars" % "numeral-js" % "1.5.3-1",
   "org.webjars" % "underscorejs" % "1.8.3",
-  "org.webjars" % "webjars-play_2.10" % "2.3.0-3"
+  "org.webjars" %% "webjars-play" % "2.3.0-3"
 )
 
 javacOptions ++= Seq("-source", "1.8", "-target", "1.8", "-Xlint")
