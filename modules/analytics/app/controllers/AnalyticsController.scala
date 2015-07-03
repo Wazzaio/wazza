@@ -29,18 +29,18 @@ class AnalyticsController @Inject()(
   private lazy val Total = 0
   private lazy val Detailed = 1
 
-  private def getLocalDate(dateStr: String, endDate: Boolean = false) = {
+  private def getLocalDate(dateStr: String, startDate: Boolean = false) = {
     val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-    if(!endDate){
-      LocalDate.parse(dateStr, formatter).atStartOfDay().atZone(ZoneId.systemDefault)
+    if(startDate){
+      LocalDate.parse(dateStr, formatter).atStartOfDay().atZone(ZoneId.systemDefault).minusDays(1)
     } else {
-      LocalDate.parse(dateStr, formatter).atStartOfDay().atZone(ZoneId.systemDefault).plusDays(1)
+      LocalDate.parse(dateStr, formatter).atStartOfDay().atZone(ZoneId.systemDefault)
     }
   }
 
-  private def validateDate(dateStr: String, endDate: Boolean = false): Try[Date] = {
+  private def validateDate(dateStr: String, startDate: Boolean = false): Try[Date] = {
     try {
-      val ld = getLocalDate(dateStr, endDate)
+      val ld = getLocalDate(dateStr, startDate)
       new Success(Date.from(ld.toInstant()))
     } catch {
       case ex: ParseException => {
@@ -59,8 +59,8 @@ class AnalyticsController @Inject()(
   }
 
   private def getPreviousDates(startStr: String, endStr: String): (Date, Date) = {
-    val start = getLocalDate(startStr)
-    val end =  getLocalDate(endStr, true)
+    val start = getLocalDate(startStr, true)
+    val end =  getLocalDate(endStr)
     val difference = Period.between(start.toLocalDate(), end.toLocalDate()).getDays()
     (Date.from(start.minusDays(difference).toInstant()), Date.from(end.minusDays(difference).toInstant()))
   }
@@ -153,8 +153,8 @@ class AnalyticsController @Inject()(
       }
     }
 
-    val start = validateDate(startDateStr)
-    val end = validateDate(endDateStr, true)
+    val start = validateDate(startDateStr, true)
+    val end = validateDate(endDateStr)
 
     (start, end) match {
       case (Success(s), Success(e)) => {

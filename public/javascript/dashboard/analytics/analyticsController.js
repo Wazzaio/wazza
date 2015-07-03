@@ -59,7 +59,7 @@ dashboard
       updateChartData(context, KpiId, label);
       updateTotalValues(context, KpiId);
     };
-;     
+
     var updateChartData = function(context, KpiId, label) {
       GetKPIService.getDetailedKPIData(
         ApplicationStateService.getCompanyName(),
