@@ -27,6 +27,7 @@ import scala.concurrent.duration._
 import akka.util.{Timeout}
 import scala.collection.mutable.Stack
 import java.time._
+import java.time.temporal.ChronoUnit;
 
 class AnalyticsServiceImpl extends AnalyticsService {
 
@@ -74,7 +75,7 @@ class AnalyticsServiceImpl extends AnalyticsService {
   ): Future[JsArray] = {
     val s = LocalDateTime.ofInstant(Instant.ofEpochMilli(start.getTime()), ZoneId.systemDefault())
     val e = LocalDateTime.ofInstant(Instant.ofEpochMilli(end.getTime()), ZoneId.systemDefault())
-    val days = Period.between(s.toLocalDate(), e.toLocalDate()).getDays() + 1
+    var days = ChronoUnit.DAYS.between(s.toLocalDate(), e.toLocalDate()) + 1
 
     val futureResult = Future.sequence(List.range(0, days) map {dayIndex =>
       val currentDayLocalDateTime = s.plusDays(dayIndex)
