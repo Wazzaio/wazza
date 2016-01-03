@@ -48,3 +48,5 @@ To run on production mode run:
     sudo nohup ./wazza/bin/wazza -Dconfig.file=/${PATH_TO_CONF}/application.conf -Dhttp.port=disabled -Dhttps.port=9443
     
 
+## License
+All Wazza code is licensed under [GNU GPL v3](/LICENSE) or later. Copyright belongs to the [contributors listed on GitHub](https://github.com/Wazzaio/wazza/graphs/contributors).
