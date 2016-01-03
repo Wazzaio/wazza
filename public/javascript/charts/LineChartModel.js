@@ -67,7 +67,9 @@ wazzaCharts.factory('LineChartModel', function(){
     this.data = [];
     this.colours = [];
     this.options = {
-      bezierCurve : false
+      bezierCurve : false,
+      scaleLabel: "<%=value%>",
+      responsive: true
     },
     this._colours = {
       "Total": totalColor,
