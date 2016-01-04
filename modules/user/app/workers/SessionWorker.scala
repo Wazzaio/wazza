@@ -1,3 +1,22 @@
+/*
+ * Wazza
+ * https://github.com/Wazzaio/wazza
+ * Copyright (C) 2013-2015  Duarte Barbosa, João Vazão Vasques
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package user.workers
 
 import common.actors._
@@ -20,6 +39,8 @@ import user.messages._
 import models.user._
 import persistence.messages._
 import scala.collection.mutable.Stack
+import java.util.Date
+import models.common._
 
 class SessionWorker(
   databaseProxy: ActorRef,
@@ -44,8 +65,23 @@ class SessionWorker(
     databaseProxy ! request
   }
 
-  private def addMobileUser(userId: String, companyName: String, applicationName: String) = {
-    userProxy ! new MUCreate(new Stack, companyName, applicationName, userId)
+  private def addMobileUser(userId: String, companyName: String, applicationName: String, device: DeviceInfo) = {
+    userProxy ! new MUCreate(false, companyName, applicationName, userId, device, new Stack)
+  }
+
+  private def updateSessionInfo(
+    userId: String,
+    companyName: String,
+    applicationName: String,
+    sessionId: String,
+    sessionStart: Date,
+    platform: String
+  ) = {
+    userProxy ! new MUAddSessionInfo(
+      false, companyName, applicationName,
+      userId, new Stack, sessionId,
+      sessionStart, platform
+    )
   }
 
   private def persistenceReceive: Receive = {
@@ -56,7 +92,10 @@ class SessionWorker(
             val req = or.originalRequest.asInstanceOf[SRSave]
             saveSessionAux(req)
             addSessionToHashCollection(req)
-            addMobileUser(req.session.userId, req.companyName, req.applicationName)
+            addMobileUser(req.session.userId, req.companyName, req.applicationName, req.session.deviceInfo )
+            updateSessionInfo(
+              req.session.userId, req.companyName, req.applicationName,
+              req.session.id, req.session.startTime, req.session.deviceInfo.osType)
           }
           case _ => {
             //TODO error

@@ -1,0 +1,56 @@
+
+<!--
+   Wazza
+   https://github.com/Wazzaio/wazza
+   Copyright (C) 2013-2015  Duarte Barbosa, João Vazão Vasques
+
+      This program is free software: you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation, either version 3 of the License, or
+      (at your option) any later version.
+
+      This program is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+
+      You should have received a copy of the GNU General Public License
+      along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div class="col-md-4 col-xs-10" ng-click="switchDetailedView('analytics.productDetails')">
+  <div class="col-md-12 well panel panel-default glow profile dashboard-kpi">
+    <div class="panel-heading">
+      <div class="row text-center">
+        <div class="col-md-6">
+          <h3><strong>{{model.name}}</strong></h3>
+        </div>
+        <div class="col-md-6">
+          <h3 class="kpiValue">$ {{model.price}}</h3>
+        </div>
+      </div>      
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="col-xs-12 col-sm-8">
+            <h4>Revenue</h4>
+          </div>
+          <div class="col-xs-12 col-sm-4">
+            <h4 class="kpiValue">$ {{model.revenue}}</h4>
+          </div>
+        </div>
+      </div> <!-- row -->
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="col-xs-12 col-sm-8">
+            <h4>Contribution Rate</h4>
+          </div>
+          <div class="col-xs-12 col-sm-4">
+            <h4 class="kpiValue">{{model.contributionRate}} %</h4>
+          </div>
+        </div>
+      </div> <!-- panel body -->
+    </div> <!-- col-md-12 -->
+  </div> <!-- panel body -->
+</div>

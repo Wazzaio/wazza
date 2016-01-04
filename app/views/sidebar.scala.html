@@ -1,10 +1,30 @@
+
+<!--
+   Wazza
+   https://github.com/Wazzaio/wazza
+   Copyright (C) 2013-2015  Duarte Barbosa, João Vazão Vasques
+
+      This program is free software: you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation, either version 3 of the License, or
+      (at your option) any later version.
+
+      This program is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+
+      You should have received a copy of the GNU General Public License
+      along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
 <div id="sidebar-wrapper" ng-controller="SidebarController">
     <ul class="sidebar">
         <li class="sidebar-main">
             <a ng-click="toggleSidebar()">
                 <img src="@routes.Assets.at("images/wazza_logo_white2.png")" alt="Wazza Logo" style="height: auto; width: 10em;" ng-show="barState">
-                <span class="menu-icon" style="padding-right: 18px;">
-                    <img src="@routes.Assets.at("images/wazza_icon_white.png")" alt="Wazza Logo" style="height: auto; width: 2.1em;" ng-hide="barState">
+                <span class="menu-icon" style="padding-right: 18px;" ng-hide="barState">
+                    <img src="@routes.Assets.at("images/wazza_icon_white.png")" alt="Wazza Logo" style="height: auto; width: 2.1em;">
                 </span>
             </a>
         </li>
@@ -16,6 +36,9 @@
         </li>
         <li class="sidebar-list" ng-repeat="option in dashboardOptions" ng-show="showDashboardOptions">
             <a href="" class="childOptions" ng-click="selectDashboardSection(option.link)">{{option.name}}</a>
+        </li>
+        <li class="sidebar-list">
+          <a href="" ng-click="onProductsClick()">Products <span class="menu-icon fa fa-shopping-cart"></span></a>
         </li>
         <li class="sidebar-list">
             <a href="" ng-click="onAnalyticsClick()">Analytics <span class="menu-icon fa fa-bar-chart-o"></span></a>

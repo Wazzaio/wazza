@@ -1,0 +1,211 @@
+
+<!--
+   Wazza
+   https://github.com/Wazzaio/wazza
+   Copyright (C) 2013-2015  Duarte Barbosa, João Vazão Vasques
+
+      This program is free software: you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation, either version 3 of the License, or
+      (at your option) any later version.
+
+      This program is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+
+      You should have received a copy of the GNU General Public License
+      along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div class="row">
+<div class="col-lg-3 col-md-6 col-xs-12">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-3" style="padding-top: 1.5em;">
+          <span class="fa-stack fa-2x">
+            <i class="fa fa-circle fa-stack-2x" style="color: #34495E"></i>
+            <i class="fa fa-money fa-stack-1x fa-inverse"></i>
+          </span>
+        </div>
+        <div class="col-md-9">
+          <div class="row">
+            <div class="col-md-12">
+              <h4>Total Revenue</h4>
+            </div>
+            <div class="row text-center">
+              <div class="col-md-6">
+                <h3 class="kpiValue"><strong>$ 10 234<strong></h3>
+              </div>
+              <div class="col-md-6">
+                <div class="kpi-delta-positive">
+                  <h3><i class="fa fa-arrow-up"></i> 4,5 %</h3>
+                </div>
+              </div>
+            </div>
+          </div> <!-- row -->
+        </div> <!-- col-md-9 -->
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col-lg-3 col-md-6 col-xs-12">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-3" style="padding-top: 1.5em;">
+          <span class="fa-stack fa-2x">
+            <i class="fa fa-circle fa-stack-2x" style="color: #34495E"></i>
+            <i class="fa fa-filter fa-stack-1x fa-inverse"></i>
+          </span>
+        </div>
+        <div class="col-md-9">
+          <div class="row">
+            <div class="col-md-12">
+              <h4>Contribution Rate</h4>
+            </div>
+            <div class="row text-center">
+              <div class="col-md-6">
+                <h3 class="kpiValue"><strong>45 %<strong></h3>
+              </div>
+              <div class="col-md-6">
+                <div class="kpi-delta-positive">
+                  <h3><i class="fa fa-arrow-up"></i> 0,2 %</h3>
+                </div>
+              </div>
+            </div>
+          </div> <!-- row -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-lg-3 col-md-6 col-xs-12">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-3" style="padding-top: 1.5em;">
+          <span class="fa-stack fa-2x">
+            <i class="fa fa-circle fa-stack-2x" style="color: #34495E"></i>
+            <i class="fa fa-shopping-cart fa-stack-1x fa-inverse"></i>
+          </span>
+        </div>
+        <div class="col-md-9">
+          <div class="row">
+            <div class="col-md-12">
+              <h4>Number of Purchases</h4>
+            </div>
+            <div class="row text-center">
+              <div class="col-md-6">
+                <h3 class="kpiValue"><strong>500<strong></h3>
+              </div>
+              <div class="col-md-6">
+                <div class="kpi-delta-positive">
+                  <h3><i class="fa fa-arrow-up"></i> 10,5 %</h3>
+                </div>
+              </div>
+            </div> <!-- row -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col-lg-3 col-md-6 col-xs-12">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-3" style="padding-top: 1.5em;">
+          <span class="fa-stack fa-2x">
+            <i class="fa fa-circle fa-stack-2x" style="color: #34495E"></i>
+            <i class="fa fa-user fa-stack-1x fa-inverse"></i>
+          </span>
+        </div>
+        <div class="col-md-9">
+          <div class="row">
+            <div class="col-md-12">
+              <h4>Unique Paying Users</h4>
+            </div>
+            <div class="row text-center">
+              <div class="col-md-6">
+                <h3 class="kpiValue"><strong>326<strong></h3>
+              </div>
+              <div class="col-md-6">
+                <div class="kpi-delta-positive">
+                  <h3><i class="fa fa-arrow-up"></i> 1,26 %</h3>
+                </div>
+              </div>
+            </div>
+          </div> <!-- row -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <!-- Revenue secion -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="panel-title"><i class="fa fa-money" style="margin-right: 10px;"></i> Revenue</div>
+      </div>
+	    <div class="panel-body">
+        <canvas id="line" class="chart chart-line" data="revenueChart.data"
+                labels="revenueChart.labels" legend="true" series="revenueChart.series"
+                click="onClick" colours="revenueChart.colours" options="revenueChart.options">
+        </canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+<!-- Convertion rate secion -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="panel-title"><i class="fa fa-filter" style="margin-right: 10px;"></i>  Contribution Rate</div>
+  </div>
+	<div class="panel-body">
+    <canvas id="line" class="chart chart-line" data="convertionChart.data"
+            labels="convertionChart.labels" legend="true" series="convertionChart.series"
+            click="onClick" colours="convertionChart.colours" options="convertionChart.options">
+    </canvas>
+  </div>
+</div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <!-- Number of purchases secion -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="panel-title"><i class="fa fa-shopping-cart" style="margin-right: 10px;"></i> Number of Purchases</div>
+      </div>
+	    <div class="panel-body">
+        <canvas id="line" class="chart chart-line" data="purchasesChart.data"
+                labels="purchasesChart.labels" legend="true" series="purchasesChart.series"
+                click="onClick" colours="purchasesChart.colours" options="purchasesChart.options">
+        </canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+<!-- Users who purchase secion -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="panel-title"><i class="fa fa-user" user="margin-right: 10px;"></i> Unique Paying Users</div>
+  </div>
+	<div class="panel-body">
+    <canvas id="line" class="chart chart-line" data="usersChart.data"
+            labels="usersChart.labels" legend="true" series="usersChart.series"
+            click="onClick" colours="usersChart.colours" options="usersChart.options">
+    </canvas>
+  </div>
+</div>
+  </div>  
+</div>
+

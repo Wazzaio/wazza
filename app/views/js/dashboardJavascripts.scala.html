@@ -1,3 +1,23 @@
+
+<!--
+   Wazza
+   https://github.com/Wazzaio/wazza
+   Copyright (C) 2013-2015  Duarte Barbosa, João Vazão Vasques
+
+      This program is free software: you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation, either version 3 of the License, or
+      (at your option) any later version.
+
+      This program is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+
+      You should have received a copy of the GNU General Public License
+      along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
 <script src="@routes.Assets.at("javascript/dashboard/controllers/controllers.js")"></script>
 
 <!-- Dashboard -->
@@ -7,6 +27,13 @@
 <script src="@routes.Assets.at("javascript/dashboard/dashboard/services/DashboardCache.js")"></script>
 <script src="@routes.Assets.at("javascript/dashboard/dashboard/directives/kpiDirective.js")"></script>
 <script src="@routes.Assets.at("javascript/dashboard/dashboard/controllers/dashboardController.js")"></script>
+<script src="@routes.Assets.at("javascript/dashboard/dashboard/filters/currencyFilter.js")"></script>
+
+<!-- Products -->
+<script src="@routes.Assets.at("javascript/dashboard/products/models/ProductInfo.js")"></script>
+<script src="@routes.Assets.at("javascript/dashboard/products/directives/productDirective.js")"></script>
+<script src="@routes.Assets.at("javascript/dashboard/products/controllers/ProductListController.js")"></script>
+<script src="@routes.Assets.at("javascript/dashboard/products/controllers/ProductDetailsController.js")"></script>
 
 <!-- Overview -->
 <script src="@routes.Assets.at("javascript/dashboard/overview/overviewController.js")"></script>
@@ -17,6 +44,8 @@
 <!-- Analytics below -->
 <script src="@routes.Assets.at("javascript/dashboard/analytics/detailedKpiModel.js")"></script>
 <script src="@routes.Assets.at("javascript/dashboard/analytics/analyticsController.js")"></script>
+<script src="@routes.Assets.at("javascript/dashboard/analytics/paymentSystemFilter.js")"></script>
+
 
 <!-- ARPU -->
 <script src="@routes.Assets.at("javascript/dashboard/analytics/arpu/controllers/arpuController.js")"></script>
@@ -27,11 +56,11 @@
 <!-- Average Revenue Per Session -->
 <script src="@routes.Assets.at("javascript/dashboard/analytics/avgRevenueSession/controllers/avgRevenueSessionController.js")"></script>
 
-<!-- Average Time Between Purchase -->
-<script src="@routes.Assets.at("javascript/dashboard/analytics/avgTimeBetweenPurchase/controllers/avgTimeBetweenPurchase.js")"></script>
+<!-- Number Sessions Between Purchase -->
+<script src="@routes.Assets.at("javascript/dashboard/analytics/sessionsBetweenPurchases/controllers/sessionsBetweenPurchases.js")"></script>
 
-<!-- Average Time First Purchase -->
-<script src="@routes.Assets.at("javascript/dashboard/analytics/avgTimeFirstPurchase/controllers/avgTimeFirstPurchase.js")"></script>
+<!-- Number Sessions First Purchase -->
+<script src="@routes.Assets.at("javascript/dashboard/analytics/sessionsFirstPurchase/controllers/sessionsFirstPurchase.js")"></script>
 
 <!-- Average Purchases Per User -->
 <script src="@routes.Assets.at("javascript/dashboard/analytics/avgPurchasesPerUser/controllers/avgPurchasesPerUser.js")"></script>
@@ -54,4 +83,5 @@
 <!-- Settings -->
 <script src="@routes.Assets.at("javascript/dashboard/settings/services/settingsServices.js")"></script>
 <script src="@routes.Assets.at("javascript/dashboard/settings/services/bootstrapSettingsService.js")"></script>
+<script src="@routes.Assets.at("javascript/dashboard/settings/services/updatePaymentCredentialsService.js")"></script>
 <script src="@routes.Assets.at("javascript/dashboard/settings/controllers/settingsController.js")"></script>

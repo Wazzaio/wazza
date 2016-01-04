@@ -1,3 +1,23 @@
+
+<!--
+   Wazza
+   https://github.com/Wazzaio/wazza
+   Copyright (C) 2013-2015  Duarte Barbosa, João Vazão Vasques
+
+      This program is free software: you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation, either version 3 of the License, or
+      (at your option) any later version.
+
+      This program is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+
+      You should have received a copy of the GNU General Public License
+      along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
 <div class="row main-view">
   <div class="col-12">
     <div class="panel panel-default">
@@ -24,9 +44,8 @@
               </tr>
             </table>
             <br>
-            <h4></h4>
+            <h4>Application Information</h4>
             <table class="table">
-              <h4>Application</h4>
               <tr>
                 <td><b>Name</b></td>
                 <td>{{appName}}</td>
@@ -35,7 +54,44 @@
               <td><b>SDK Token</b></td>
               <td>{{credentials.sdkToken}}</td>
               </tr>
+              <tr>
+              <td><b>Currency</b></td>
+              <td>
+                <span class="dropdown" dropdown on-toggle="toggled(open)">
+                  <a href class="dropdown-toggle" dropdown-toggle>
+                    {{currentCurrency}}
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li ng-repeat="c in currencies">
+                      <a href="#" ng-click="changeCurrency(c.name)"><i ng-class="c.cssSymboll"></i>{{c.name}}</a>
+                    </li>
+                  </ul>
+                </span>
+              </td>
+              </tr>
             </table>
+            <h4>Payments information</h4>
+            <form class="form-horizontal" ng-submit="savePaymentChanges()">
+              <!-- PayPal Logo -->
+              <img src="@controllers.dashboard.routes.Assets.at("images/pp-logo-100px.png")" border="0" alt="PayPal Logo" style="padding-bottom:1em;"><!-- PayPal Logo -->
+              <div class="form-group">
+                <label for="inputppClientId" class="col-sm-2 control-label">ID</label>
+                <div class="col-sm-10">
+                  <input class="form-control" id="inputppClientId" ng-model="payPalCredentials.clientId" placeholder="{{payPalCredentials.clientId}}" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputppSecret" class="col-sm-2 control-label">Secret</label>
+                <div class="col-sm-10">
+                  <input class="form-control" id="inputppSecret" ng-model="payPalCredentials.secret" placeholder="{{payPalCredentials.secret}}" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>

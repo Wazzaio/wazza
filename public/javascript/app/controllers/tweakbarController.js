@@ -1,3 +1,22 @@
+/*
+ * Wazza
+ * https://github.com/Wazzaio/wazza
+ * Copyright (C) 2013-2015  Duarte Barbosa, João Vazão Vasques
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 application.controller('TweakBarController',[
   '$scope',
   'DateModel',
@@ -10,6 +29,7 @@ application.controller('TweakBarController',[
   'DashboardShowPlatformDetails',
   'DashboardUpdateValuesOnDateChange',
   'OverviewUpdateValuesOnDateChange',
+  'CurrentAppChanges',
   function (
     $scope,
     DateModel,
@@ -21,7 +41,8 @@ application.controller('TweakBarController',[
     DashboardViewChanges,
     DashboardShowPlatformDetails,
     DashboardUpdateValuesOnDateChange,
-    OverviewUpdateValuesOnDateChange
+    OverviewUpdateValuesOnDateChange,
+    CurrentAppChanges
     ) {
 
     var hideShowBar = [
@@ -30,21 +51,30 @@ application.controller('TweakBarController',[
       'analytics.privacy'
     ];
 
+    var showDetailsAnalytics = [
+      'analytics.revenue', 'analytics.arpu',
+      'analytics.avgRevenueSession', 'analytics.payingUsers',
+      'analytics.ltv', 'analytics.avgPurchasesUser',
+      'analytics.purchasesPerSession', 'analytics.sessionsFirstPurchase',
+      'analytics.sessionsBetweenPurchase'
+    ];
+
+    var handleAppChange = function() {
+      $scope.paymentSystems = ApplicationStateService.currentApplication.paymentSystems;
+    };
+
+    $rootScope.$on(CurrentAppChanges, handleAppChange);
+
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
       $scope.showBar = _.find(hideShowBar, function(s) {return s == toState.name;}) == undefined ? true : false;
+      $scope.hideDetails = _.find(showDetailsAnalytics, function(s) {return s == toState.name;}) == undefined ? true : false;
     });
 
-    $scope.showDashboardViewOptions = false;
-    $scope.viewText = "Numerical";
-    $scope.showDetailsButton = true;
-    $scope.updateView = function(value) {
-      $scope.showDetailsButton = (value == 1) ? true: false;
-      $scope.viewText = (value == 1) ? "Numerical" : "Visual";
-      $rootScope.$broadcast(DashboardViewChanges, {newView: value});
-    };
     $scope.hideDetails = true;
+    $scope.showDetailsButtonText = ($scope.hideDetails) ? "Show Details" : "Hide Details";
     $scope.showDetails = function(){
       $scope.hideDetails = ! $scope.hideDetails;
+      $scope.showDetailsButtonText = ($scope.hideDetails) ? "Show Details" : "Hide Details";
       $rootScope.$broadcast(DashboardShowPlatformDetails, {value: $scope.hideDetails});
     };
 

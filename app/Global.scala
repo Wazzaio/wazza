@@ -1,3 +1,22 @@
+/*
+ * Wazza
+ * https://github.com/Wazzaio/wazza
+ * Copyright (C) 2013-2015  Duarte Barbosa, João Vazão Vasques
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import play.api.{GlobalSettings, Application}
 import com.google.inject._
 import play.api._
@@ -24,8 +43,12 @@ import scala.concurrent._
 import scala.concurrent.duration._
 import notifications._
 import notifications.messages._
+import payments._
+import play.filters.headers.SecurityHeadersFilter
+import java.util.TimeZone
+import play.api.Logger
 
-object Global extends GlobalSettings {
+object Global extends WithFilters(SecurityHeadersFilter()) with GlobalSettings {
 
   private var modulesProxies = List[ActorRef]()
 
@@ -33,6 +56,7 @@ object Global extends GlobalSettings {
     Creates modules system's and proxies
   **/
   override def onStart(app: Application) = {
+    Logger.info("Running on Timezone: " + TimeZone.getDefault())
     val databaseProxy = PersistenceProxy.getInstance()
     val userProxy = UserProxy.getInstance()
     val applicationProxy = ApplicationProxy.getInstance()
@@ -69,7 +93,8 @@ object Global extends GlobalSettings {
       new SecurityModule,
       new AWSModule,
       new PersistenceModule,
-      new AnalyticsModule
+      new AnalyticsModule,
+      new PaymentsModule
     )
   }
 

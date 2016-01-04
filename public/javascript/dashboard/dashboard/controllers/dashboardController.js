@@ -1,5 +1,25 @@
+/*
+ * Wazza
+ * https://github.com/Wazzaio/wazza
+ * Copyright (C) 2013-2015  Duarte Barbosa, João Vazão Vasques
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 dashboard.controller('DashboardController', [
     '$scope',
+    '$rootScope',
     "$anchorScroll",
     "$state",
     "$document",
@@ -13,8 +33,10 @@ dashboard.controller('DashboardController', [
     "DashboardViewChanges",
     "DashboardShowPlatformDetails",
     "DashboardUpdateValuesOnDateChange",
+    "CurrencyChanges",
     function (
         $scope,
+        $rootScope,
         $anchorScroll,
         $state,
         $document,
@@ -27,17 +49,11 @@ dashboard.controller('DashboardController', [
         DashboardCache,
         DashboardViewChanges,
         DashboardShowPlatformDetails,
-        DashboardUpdateValuesOnDateChange
+        DashboardUpdateValuesOnDateChange,
+        CurrencyChanges
         ) {
         
-        /** Modes: 0 = chart ; 1 = numbers **/
-        $scope.viewMode = 1;
         $scope.showDetails = true;
-
-        var updateView = function(ev, data) {
-          $scope.viewMode = data.newView;
-        };
-        $scope.$on(DashboardViewChanges, updateView);
         
         var showHidePlatformDetails = function(ev, data) {
           $scope.showDetails = data.value;
@@ -50,6 +66,13 @@ dashboard.controller('DashboardController', [
         $scope.arpu = new KpiModel("Avg Revenue Per User", "analytics.arpu");
         $scope.avgRevSession = new KpiModel("Avg Revenue per Session", "analytics.avgRevenueSession");
 
+        /** Updates KPI revenue on currency change **/
+        $rootScope.$on(CurrencyChanges, function() {
+          $scope.totalRevenue.currencyUpdate();
+          $scope.arpu.currencyUpdate();
+          $scope.avgRevSession.currencyUpdate();
+        });
+
         /** User KPIs **/
         $scope.ltv = new KpiModel("Life Time Value", "analytics.ltv");
         $scope.payingUsers = new KpiModel("Paying Users", "analytics.payingUsers");
@@ -57,8 +80,8 @@ dashboard.controller('DashboardController', [
 
         /** Session KPIs **/
         $scope.purchasesPerSession = new KpiModel("Purchases per Session", "analytics.purchasesPerSession");
-        $scope.avgTimeFirstPurchase = new KpiModel("Avg Time 1st Purchase", "analytics.avgTime1stPurchase");
-        $scope.avgTimeBetweenPurchases = new KpiModel("Avg Time Bet. Purchases", "analytics.avgTimebetweenPurchase");
+        $scope.numberSessionsFirstPurchase = new KpiModel("Sessions to First Purchase", "analytics.sessionsFirstPurchase");
+        $scope.numberSessionsBetweenPurchases = new KpiModel("Sessions Between Purchases", "analytics.sessionsBetweenPurchase");
 
         $scope.platforms = ApplicationStateService.selectedPlatforms;
         $scope.$on(SelectedPlatformsChange, function(event, args){
@@ -77,31 +100,32 @@ dashboard.controller('DashboardController', [
           var end = DateModel.formatDate(DateModel.endDate);
 
           
-          GetKPIService.getTotalKpiData(companyName, app, begin, end, "revenue", $scope.platforms)
+          GetKPIService.getTotalKpiData(companyName, app, begin, end, "revenue", $scope.platforms, ApplicationStateService.currentApplication.paymentSystems)
             .then(function(res) {$scope.totalRevenue.updateKpiValue(res.data);});
 
-          GetKPIService.getTotalKpiData(companyName, app, begin, end, "arpu", $scope.platforms)
+          GetKPIService.getTotalKpiData(companyName, app, begin, end, "arpu", $scope.platforms, ApplicationStateService.currentApplication.paymentSystems)
             .then(function(res) {$scope.arpu.updateKpiValue(res.data);});
 
-          GetKPIService.getTotalKpiData(companyName, app, begin, end, "avgRevenueSession", $scope.platforms)
+          GetKPIService.getTotalKpiData(companyName, app, begin, end, "avgRevenueSession", $scope.platforms, ApplicationStateService.currentApplication.paymentSystems)
             .then(function(res) {$scope.avgRevSession.updateKpiValue(res.data);});
 
-          GetKPIService.getTotalKpiData(companyName, app, begin, end, "ltv", $scope.platforms)
+          GetKPIService.getTotalKpiData(companyName, app, begin, end, "ltv", $scope.platforms, ApplicationStateService.currentApplication.paymentSystems)
             .then(function(res) {$scope.ltv.updateKpiValue(res.data);});
 
-          GetKPIService.getTotalKpiData(companyName, app, begin, end, "payingUsers", $scope.platforms)
+          GetKPIService.getTotalKpiData(companyName, app, begin, end, "payingUsers", $scope.platforms, ApplicationStateService.currentApplication.paymentSystems)
             .then(function(res) {$scope.payingUsers.updateKpiValue(res.data);});
             
-          GetKPIService.getTotalKpiData(companyName, app, begin, end, "avgPurchasesUser", $scope.platforms)
+          GetKPIService.getTotalKpiData(companyName, app, begin, end, "avgPurchasesUser", $scope.platforms, ApplicationStateService.currentApplication.paymentSystems)
             .then(function(res) {$scope.avgPurchasesUser.updateKpiValue(res.data);});
 
-          GetKPIService.getTotalKpiData(companyName, app, begin, end, "purchasesPerSession", $scope.platforms)
+          GetKPIService.getTotalKpiData(companyName, app, begin, end, "purchasesPerSession", $scope.platforms, ApplicationStateService.currentApplication.paymentSystems)
             .then(function(res) {$scope.purchasesPerSession.updateKpiValue(res.data);});
 
-          GetKPIService.getTotalKpiData(companyName, app, begin, end, "avgTimeBetweenPurchases", $scope.platforms)
-            .then(function(res) {$scope.avgTimeBetweenPurchases.updateKpiValue(res.data);});
+          GetKPIService.getTotalKpiData(companyName, app, begin, end, "sessionsBetweenPurchases", $scope.platforms, ApplicationStateService.currentApplication.paymentSystems)
+            .then(function(res) {$scope.numberSessionsBetweenPurchases.updateKpiValue(res.data);});
             
-          //   GetKPIService.getTotalKpiData(companyName, app, begin, end, "avgTime1stPurchase", $scope.platforms),  
+          GetKPIService.getTotalKpiData(companyName, app, begin, end, "sessionsFirstPurchase", $scope.platforms, ApplicationStateService.currentApplication.paymentSystems)
+            .then(function(res) {$scope.numberSessionsFirstPurchase.updateKpiValue(res.data);});
         };
         
         $scope.updateKPIs = function(){

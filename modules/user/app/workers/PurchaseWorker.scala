@@ -1,3 +1,22 @@
+/*
+ * Wazza
+ * https://github.com/Wazzaio/wazza
+ * Copyright (C) 2013-2015  Duarte Barbosa, João Vazão Vasques
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package user.workers
 
 import common.actors._
@@ -25,24 +44,50 @@ import java.math.BigInteger
 import scala.collection.mutable.Map
 import models.user.{CompanyData}
 import scala.collection.mutable.Stack
+import java.util.Date
+import models.payments._
 
 class PurchaseWorker(
-  databaseProxy: ActorRef
+  databaseProxy: ActorRef,
+  userProxy: ActorRef
 ) extends Actor with Worker[PurchaseMessageRequest] with ActorLogging {
 
   def storePurchase(msg: PRSave) = {
     val collection = PurchaseInfo.getCollection(msg.companyName, msg.applicationName)
-    val request = new Insert(msg.sendersStack, collection, msg.info)
+    val request = new Insert(new Stack, collection, msg.info.toJson)
     databaseProxy ! request
   }
 
   def saveUserAsBuyer(msg: PRSave) = {
     val collection = Buyer.getCollection(msg.companyName, msg.applicationName)
     val model = Json.obj("userId" -> msg.info.userId)
-    val request = new Insert(msg.sendersStack, collection, model)
+    val request = new Insert(new Stack, collection, model)
     databaseProxy ! request
   }
 
+  private def updateMobileUserPurchaseInfo(
+    companyName: String,
+    applicationName: String,
+    purchaseId: String,
+    userId: String,
+    purchaseDate: Date,
+    platform: String,
+    paymentSystem: Int
+  ) = {
+    val request = new MUAddPurchaseId(
+      false,
+      companyName,
+      applicationName,
+      userId,
+      new Stack,
+      purchaseId,
+      purchaseDate,
+      platform,
+      paymentSystem
+    )
+
+    userProxy ! request
+  }
 
   private def persistenceReceive: Receive = {
     case r: PRBooleanResponse => {
@@ -52,6 +97,15 @@ class PurchaseWorker(
             val req = or.originalRequest.asInstanceOf[PRSave]
             storePurchase(req)
             saveUserAsBuyer(req)
+            updateMobileUserPurchaseInfo(
+              req.companyName,
+              req.applicationName,
+              req.info.id,
+              req.info.userId,
+              req.info.time,
+              req.info.deviceInfo.osType,
+              req.info.paymentSystem
+            )
           }
           case _ => {
             //TODO show error
@@ -80,5 +134,5 @@ class PurchaseWorker(
 
 object PurchaseWorker {
 
-  def props(databaseProxy: ActorRef): Props = Props(new PurchaseWorker(databaseProxy))
+  def props(databaseProxy: ActorRef, userProxy: ActorRef): Props = Props(new PurchaseWorker(databaseProxy, userProxy))
 }

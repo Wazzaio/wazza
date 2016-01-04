@@ -1,3 +1,22 @@
+/*
+ * Wazza
+ * https://github.com/Wazzaio/wazza
+ * Copyright (C) 2013-2015  Duarte Barbosa, João Vazão Vasques
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package application.workers
 
 import common.actors._
@@ -93,6 +112,8 @@ class ApplicationWorker(
     case m: ARDelete => delete(m, sender)
     case m: ARExists => exists(m, sender)
     case m: ARFind => find(m, sender)
+    case m: ARAddPayPalCredentials => addPayPalCredentials(m, sender)
+    case m: ARAddPaymentSystem => addPaymentSystem(m, sender)
   }
 
   def receive = applicationRequests orElse persistenceReceive
@@ -119,6 +140,23 @@ class ApplicationWorker(
     val email = s"Company ${msg.companyName} has created a new application ${msg.application.name} for ${msg.application.appType}"
     val mailRequest = new SendEmail(new Stack, List("support@wazza.io"), "New Application Created", email)
     notificationProxy ! mailRequest
+  }
+
+  private def addPaymentSystem(msg: ARAddPaymentSystem, sender: ActorRef) = {
+    val collection = WazzaApplication.getCollection(msg.companyName, msg.applicationName)
+    val request = new AddElementToArray[Int](
+      msg.sendersStack, collection, WazzaApplication.Key, msg.applicationName,
+      "paymentSystems", msg.paymentSystem, false, null)
+    databaseProxy ! request 
+  }
+
+  private def addPayPalCredentials(msg: ARAddPayPalCredentials, sender: ActorRef) = {
+    val collection = WazzaApplication.getCollection(msg.companyName, msg.applicationName)
+    val request = new Update(
+      msg.sendersStack, collection, WazzaApplication.Key,
+      msg.applicationName, "payPalCredentials", Json.toJson(msg.paypalCredentials),
+      true, msg.hash)
+    databaseProxy ! request
   }
 
   private def delete(msg: ARDelete, sender: ActorRef) = {
@@ -148,7 +186,7 @@ class ApplicationWorker(
 
 
     val application = WazzaApplicationImplicits.buildFromJson(response.res)
-    def addApplication = {
+    def addApplication() = {
       val addApplicationRequest = new AddElementToArray[String](
         request.sendersStack,
         CompanyData.Collection,

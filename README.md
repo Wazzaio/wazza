@@ -5,9 +5,9 @@
 Install activator and put it in your system's PATH
 
     
-    wget http://downloads.typesafe.com/typesafe-activator/1.2.12/typesafe-activator-1.2.12-minimal.zip
-    unzip typesafe-activator-1.2.12-minimal.zip
-    export PATH="${PATH_TO_ACTIVATOR}/activator-1.2.12-minimal/:$PATH"
+    wget http://downloads.typesafe.com/typesafe-activator/1.3.2/typesafe-activator-1.3.2-minimal.zip
+    unzip typesafe-activator-1.3.2-minimal.zip
+    export PATH="${PATH_TO_ACTIVATOR}/activator-1.3.2-minimal/:$PATH"
     
 Clone the repository and add the configuration files to the *conf* folder. After that run:
     
@@ -16,6 +16,15 @@ Clone the repository and add the configuration files to the *conf* folder. After
     
 
 This will run using the *conf/application.conf* configuration
+
+## Test
+
+Create an account in the app with company name "Wazza" and an application called "Demo"
+
+Launch mongod and run on another sh:
+
+	mongo localhost:27017/dev modules/analytics/app/bootstrapAnalytics.js
+
 
 ## Deployment operations
 
@@ -32,5 +41,12 @@ Inside the *ops* directory there is a folder called *deployment*. This folder co
     
     cd deployment
     python deploy.sh ${WAZZA_VERSION} # example: python deploy.py alpha
+
+
+To run on production mode run:
+
+    sudo nohup ./wazza/bin/wazza -Dconfig.file=/${PATH_TO_CONF}/application.conf -Dhttp.port=disabled -Dhttps.port=9443
     
 
+## License
+All Wazza code is licensed under [GNU GPL v3](/LICENSE) or later. Copyright belongs to the [contributors listed on GitHub](https://github.com/Wazzaio/wazza/graphs/contributors).

@@ -1,122 +1,170 @@
-service.factory('ApplicationStateService', ['$rootScope', 'localStorageService', 'SelectedPlatformsChange',
-	function ($rootScope, localStorageService, SelectedPlatformsChange) {
+/*
+ * Wazza
+ * https://github.com/Wazzaio/wazza
+ * Copyright (C) 2013-2015  Duarte Barbosa, João Vazão Vasques
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-    function AppInfo(name, platforms) {
+service.factory('ApplicationStateService', [
+  '$rootScope',
+  'localStorageService',
+  'SelectedPlatformsChange',
+  'CurrencyService',
+  'CurrencyChanges',
+  'CurrentAppChanges',
+	function (
+    $rootScope,
+    localStorageService,
+    SelectedPlatformsChange,
+    CurrencyService,
+    CurrencyChanges,
+    CurrentAppChanges
+  ) {
+      
+    function AppInfo(name, platforms, paymentSystems) {
       this.name = name;
       this.platforms = platforms;
+      this.paymentSystems = paymentSystems;
     };
-          
-		var service = {};
-		service.applicationName = "";
-		service.companyName = "";
-		service.applicationsList = [];
-		service.userInfo = {};
-		service.path = "";
-	  service.applicationOverview = "";
-    service.selectedPlatforms = [];
-    service.apps = [];
+
+    this.currentApplication = {};
+	this.applicationName = "";
+	this.companyName = "";
+	this.applicationsList = [];
+    this.userInfo = {
+		name: "",
+		email: ""
+	};
+	this.path = "";
+	this.applicationOverview = "";
+    this.selectedPlatforms = [];
+    this.apps = [];
+    this.currency = CurrencyService.getDefaultCurrency();
 
 		//current view
-		service.getPath = function () {
-			return service.path;
+		this.getPath = function () {
+			return this.path;
 		};
 
-		service.setPath = function(value) {
-			service.path = value;
+		this.setPath = function(value) {
+			this.path = value;
 			$rootScope.page = value;
 			$rootScope.$broadcast("PAGE_UPDATED");
 		};
 
 		//current selected app
-		service.getApplicationName = function () {
-			return service.applicationName;
+		this.getApplicationName = function () {
+			return this.applicationName;
 		}
 
-		service.updateApplicationName = function (newName) {
-			service.applicationName = newName;
+		this.updateApplicationName = function (newName) {
+			this.applicationName = newName;
 			$rootScope.applicationName = newName;
 			$rootScope.$broadcast("APPLICATION_NAME_UPDATED"); 
 		};
 
-    service.updateApps = function(apps) {
-      service.apps = [];
-      _.each(apps, function(appInfo) {
-        service.apps.push(new AppInfo(appInfo.name, appInfo.platforms));
-      });
-    }
+	    this.updateApps = function(apps) {
+	      var _apps = [];
+	      _.each(apps, function(appInfo) {
+	        _apps.push(new AppInfo(appInfo.name, appInfo.platforms, appInfo.paymentSystems));
+	      });
+	      this.apps = _apps;
+	    }
 
 		//currently logged company
-		service.getCompanyName = function(newName) {
-			return service.companyName;
+		this.getCompanyName = function(newName) {
+			return this.companyName;
 		};
 
-		service.updateCompanyName = function(newName) {
-			service.companyName = newName;
+		this.updateCompanyName = function(newName) {
+			this.companyName = newName;
 			$rootScope.$broadcast("COMPANY_NAME_UPDATED");
 		};
 
 		//applications of logged user
-		service.getApplicationsList = function (newList) {
-			return service.applicationsList;
+		this.getApplicationsList = function (newList) {
+			return this.applicationsList;
 		};
 
-		service.updateApplicationsList = function (newList) {
-			service.applicationsList = newList.slice(0);
+		this.updateApplicationsList = function (newList) {
+			this.applicationsList = newList.slice(0);
 			$rootScope.$broadcast("APPLICATIONS_LIST_UPDATED");
 		};
 
 		//applications information (overview view)
-		service.getApplicationsOverview = function () {
-			return service.applicationOverview;
+		this.getApplicationsOverview = function () {
+			return this.applicationOverview;
 		}
 
-		service.updateApplicationsOverview = function (apps) {
-			service.applicationOverview = apps;
+		this.updateApplicationsOverview = function (apps) {
+			this.applicationOverview = apps;
 		};
 
 		//user info: name & mail
-		service.getUserInfo = function () {
-			service.userInfo = localStorageService.get("userInfo");
-			return service.userInfo;
+		this.getUserInfo = function () {
+			this.userInfo = localStorageService.get("userInfo");
+			return this.userInfo;
 		};
 
-		service.updateUserInfo = function (newInfo) {
-			service.userInfo = newInfo;
+		this.updateUserInfo = function (newInfo) {
+			this.userInfo = newInfo;
 			localStorageService.set("userInfo", newInfo);
 			$rootScope.$broadcast("USER_INFO_UPDATED");
 		};
 
 		//hack to mantain initial clean state
-		service.cleanup = function () {
-			service.applicationName = "";
-			service.companyName = "";
-			service.applicationsList = [];
-			service.userInfo = {
+		this.cleanup = function () {
+			this.applicationName = "";
+			this.companyName = "";
+			this.applicationsList = [];
+			this.userInfo = {
 				name: "",
 				email: ""
 			};
-			service.path = "";
-			service.applicationOverview = "";
+			this.path = "";
+			this.applicationOverview = "";
 		};
 
     // Platform operations: add and remove platforms that are presented
-
-    service.resetPlatforms = function() {
-      service.selectedPlatforms = [];
+    this.resetPlatforms = function() {
+      this.selectedPlatforms = [];
     };
 
-    service.addPlatforms = function(platform) {
-      if(!_.contains(service.selectedPlatforms, platform)) {
-        service.selectedPlatforms.push(platform);
+    this.addPlatforms = function(platform) {
+      if(!_.contains(this.selectedPlatforms, platform)) {
+        this.selectedPlatforms.push(platform);
       }
       $rootScope.$broadcast(SelectedPlatformsChange);
     };
 
-    service.removePlatform = function(platform) {
-      service.selectedPlatforms = _.without(service.selectedPlatforms, platform);
+    this.removePlatform = function(platform) {
+      this.selectedPlatforms = _.without(this.selectedPlatforms, platform);
       $rootScope.$broadcast(SelectedPlatformsChange);
     };
 
-		return service;
+    this.changeCurrency = function(newCurrency) {
+      this.currency = newCurrency;
+      $rootScope.$broadcast(CurrencyChanges);
+    };
+
+    this.updateCurrentApplication = function(app) {
+      this.currentApplication = app;
+      $rootScope.$broadcast(CurrentAppChanges);
+    };
+      
+		return this;
 	}
 ]);
+

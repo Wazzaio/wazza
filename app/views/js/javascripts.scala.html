@@ -1,16 +1,38 @@
+
+<!--
+   Wazza
+   https://github.com/Wazzaio/wazza
+   Copyright (C) 2013-2015  Duarte Barbosa, João Vazão Vasques
+
+      This program is free software: you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation, either version 3 of the License, or
+      (at your option) any later version.
+
+      This program is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+
+      You should have received a copy of the GNU General Public License
+      along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
 <script src="@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))"></script>
 <script src="@routes.WebJarAssets.at(WebJarAssets.locate("angular.min.js"))"></script>
 <script src="@routes.WebJarAssets.at(WebJarAssets.locate("angular-route.min.js"))"></script>
 <script src="@routes.WebJarAssets.at(WebJarAssets.locate("angular-cookies.min.js"))"></script>
 <script src="@routes.WebJarAssets.at(WebJarAssets.locate("angular-ui-router.min.js"))"></script>
 <script src="@routes.WebJarAssets.at(WebJarAssets.locate("angular-local-storage.min.js"))"></script>
+<script src="@routes.WebJarAssets.at(WebJarAssets.locate("angular-resource.min.js"))"></script>
 <script defer src="@routes.WebJarAssets.at(WebJarAssets.locate("underscore-min.js"))"></script>
 <script defer src="@routes.WebJarAssets.at(WebJarAssets.locate("ui-bootstrap.min.js"))"></script>
 <script defer src="@routes.WebJarAssets.at(WebJarAssets.locate("ui-bootstrap-tpls.min.js"))"></script>
-<script defer src="@routes.WebJarAssets.at(WebJarAssets.locate("moment.min.js"))"></script>
 <script defer src="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))"></script>
 <script defer src="@routes.WebJarAssets.at(WebJarAssets.locate("numeral.min.js"))"></script>
+
 <!-- others -->
+<script defer src="@routes.Assets.at("javascript/vendors/uservoice_bootstrap.js")"></script>
 <script defer src="@routes.Assets.at("javascript/vendors/angular-file-upload.min.js")"></script>
 <script defer src="@routes.Assets.at("javascript/vendors/angular-file-upload-html5-shim.min.js")"></script>
 <!-- https://github.com/t4t5/sweetalert -->
@@ -20,10 +42,10 @@
 <!-- AdminLTE App -->
 <script defer src="@routes.Assets.at("javascript/vendors/app.js")"></script>
 
-<!-- D3 dependencies -->
-<script src="@routes.Assets.at("javascript/vendors/d3.min.js")"></script>
-<script src="@routes.Assets.at("javascript/vendors/nv.d3.min.js")"></script>
-<script src="@routes.Assets.at("javascript/vendors/angular-nvd3.min.js")"></script>
+<!-- Chart dependencies -->
+<script src="@routes.WebJarAssets.at(WebJarAssets.locate("min/moment.min.js"))"></script>
+<script src="@routes.WebJarAssets.at(WebJarAssets.locate("Chart.min.js"))"></script>
+<script defer src="@routes.WebJarAssets.at(WebJarAssets.locate("angular-chart.js"))"></script>
 
 <!-- Angular stuff -->
 <!-- app -->
@@ -43,6 +65,7 @@
 <script defer src="@routes.Assets.at("javascript/app/services/SecurityHttpInterceptor.js")"></script>
 <script defer src="@routes.Assets.at("javascript/app/services/redirectToDashboardService.js")"></script>
 <script defer src="@routes.Assets.at("javascript/app/services/DateModel.js")"></script>
+<script defer src="@routes.Assets.at("javascript/app/services/CurrencyService.js")"></script>
 <script defer src="@routes.Assets.at("javascript/app/services/ApplicationStateService.js")"></script>
 <script defer src="@routes.Assets.at("javascript/app/services/LoginLogoutService.js")"></script>
 <script defer src="@routes.Assets.at("javascript/app/services/UserVoiceService.js")"></script>

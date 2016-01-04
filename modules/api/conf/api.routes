@@ -4,8 +4,12 @@
 #GET     /items/details/:companyName/:appName     @controllers.api.ItemsController.getItemsWithDetails(companyName: String, appName: String)
 #GET     /item/:companyName/:applicationName/:id  @controllers.api.ItemsController.getItemDetails(companyName: String, id: String, applicationName: String)
 
+# Authentication
+POST    /auth/      @controllers.api.AuthenticationController.authentication()
+  
 # Purchases routes
 POST    /purchase/  @controllers.api.PurchaseController.handlePurchase()
+POST    /payment/verify/ @controllers.api.PurchaseController.verifyPayment()
 
 # Session routes
 POST    /session/new/   @controllers.api.SessionController.saveSession()
@@ -13,10 +17,4 @@ POST    /session/new/   @controllers.api.SessionController.saveSession()
 GET     /assets/*file                 controllers.api.Assets.at(path="/public", file)
 GET     /webjars/*file                controllers.WebJarAssets.at(file)
 
-
-#Internal - bootstrap test scenarios
-#POST    /bootstrap/:companyName/:appName @controllers.api.BootstrapEnvironmentController.execute(companyName: String, appName: String)
-
-#POST    /bootstrap/sessions/:companyName/:appName @controllers.api.GenerateSessionsController.execute(companyName: String, appName: String)
-
-#POST    /bootstrap/purchases/:companyName/:appName @controllers.api.GeneratePurchasesController.execute(companyName: String, appName: String)
+  
